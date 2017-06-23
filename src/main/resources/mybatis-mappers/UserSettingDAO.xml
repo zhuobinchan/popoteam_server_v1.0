@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UserSettingDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.jsonModel.UserSetting">
+        <id column="pu_setting_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_setting_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_setting_nty_by_sound" property="ntyBySound" jdbcType="INTEGER"/>
+        <result column="pu_setting_nty_by_vibration" property="ntyByVibration" jdbcType="INTEGER"/>
+        <result column="pu_setting_is_speaker_on" property="isSpeakerOn" jdbcType="INTEGER"/>
+        <result column="pu_setting_show_friends_to_stranger" property="showFriendsToStranger" jdbcType="INTEGER"/>
+        <result column="pu_setting_shield_phone_on" property="shieldPhoneOn" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_setting.id as pu_setting_id,
+        pu_setting.user_id as pu_setting_user_id,
+        pu_setting.nty_by_sound as pu_setting_nty_by_sound,
+        pu_setting.nty_by_vibration as pu_setting_nty_by_vibration,
+        pu_setting.is_speaker_on as pu_setting_is_speaker_on,
+        pu_setting.show_friends_to_stranger as pu_setting_show_friends_to_stranger,
+        pu_setting.shield_phone_on as pu_setting_shield_phone_on
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_setting
+        where pu_setting.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_setting
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_setting.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_setting.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="ntyBySound != null">
+                and pu_setting.nty_by_sound = #{ntyBySound,jdbcType=INTEGER}
+            </if>
+            <if test="ntyByVibration != null">
+                and pu_setting.nty_by_vibration = #{ntyByVibration,jdbcType=INTEGER}
+            </if>
+            <if test="isSpeakerOn != null">
+                and pu_setting.is_speaker_on = #{isSpeakerOn,jdbcType=INTEGER}
+            </if>
+            <if test="showFriendsToStranger != null">
+                and pu_setting.show_friends_to_stranger = #{showFriendsToStranger,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by pu_setting.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_setting
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_setting.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_setting.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="ntyBySound != null">
+                and pu_setting.nty_by_sound = #{ntyBySound,jdbcType=INTEGER}
+            </if>
+            <if test="ntyByVibration != null">
+                and pu_setting.nty_by_vibration = #{ntyByVibration,jdbcType=INTEGER}
+            </if>
+            <if test="isSpeakerOn != null">
+                and pu_setting.is_speaker_on = #{isSpeakerOn,jdbcType=INTEGER}
+            </if>
+            <if test="showFriendsToStranger != null">
+                and pu_setting.show_friends_to_stranger = #{showFriendsToStranger,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by pu_setting.id desc
+        limit 1
+    </select>
+
+</mapper>

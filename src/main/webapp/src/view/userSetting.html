@@ -1,0 +1,115 @@
+<style>
+    .sum-table .table-body{
+        border:3px solid transparent;
+        margin: 10px;
+        background-color:#f1f2f2
+    }
+    .sum-table .desc{
+        margin-bottom: 10px;
+        padding-bottom: 15px;
+        color:#666;
+        border-bottom:1px solid #ddd;
+    }
+    .sum-table ul{
+        margin: 0px;
+        margin-bottom: 10px;
+        padding: 0px;
+        list-style: none;
+    }
+    .sum-table ul li{
+        padding: 6px 0px;
+        padding-left: 11px;
+        font-size: 13px;
+        line-height: 13px;
+        color: #666;
+    }
+</style>
+<div class="console-sub-title">
+    用户列表
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">用户列表</div>
+
+    <div class="form-inline search-con" style="margin-top: 10px;margin-left: 10px;margin-right: 10px;">
+
+        <select class="form-control" ng-model="searchType">
+            <option value="identify">ID</option>
+            <option value="nickName">昵称</option>
+            <option value="phone">手机</option>
+            <option value="age">年龄</option>
+        </select>
+
+        <input type="text" class="form-control" placeholder="输入关键字" style="max-width:140px;"
+               ng-model="searchContent">
+
+        <select class="form-control"
+                ng-model="params.provinceId"
+                ng-options="province.code as province.name for province in provinceList"
+                ng-change="getDistrict(2,params.provinceId)">
+            <option value="">省份</option>
+        </select>
+        <select class="form-control info-input-select"
+                ng-model="params.cityId"
+                ng-options="city.code as city.name for city in cityList ">
+            <option value="">城市</option>
+        </select>
+
+
+        <select class="form-control" ng-model="params.sex">
+            <option value="">性别</option>
+            <option value="M">男</option>
+            <option value="F">女</option>
+        </select>
+
+        <span style="margin-left: 10px;">注册时间</span>
+
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="params.registerTimeBegin"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker data-ng-model="params.registerTimeBegin"
+                                data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+        <span>-</span>
+
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="params.registerTimeEnd"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker data-ng-model="params.registerTimeEnd"
+                                data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+
+        <button type="button" class="btn btn-default" ng-click="searchParam()">筛选</button>
+        <button type="button" class="btn btn-default" ng-click="reset()">重置</button>
+
+    </div>
+
+    <div class="form-inline clearfix" style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="freeze(true)">
+            导入
+        </button>
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="freeze(false)">
+            新增
+        </button>
+    </div>
+
+    <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+</div>

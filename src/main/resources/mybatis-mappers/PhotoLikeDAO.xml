@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.PhotoLikeDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.PhotoLike">
+        <id column="pu_photo_like_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_photo_like_photo_id" property="photoId" jdbcType="BIGINT"/>
+        <result column="pu_photo_like_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_photo_like_is_friend" property="isFriend" jdbcType="BIT"/>
+        <result column="pu_photo_like_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_photo_like_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="user" column="pu_photo_like_user_id"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+
+    </resultMap>
+    <sql id="tableProperty">
+    pu_photo_like.id as pu_photo_like_id,
+    pu_photo_like.photo_id as pu_photo_like_photo_id,
+    pu_photo_like.user_id as pu_photo_like_user_id,
+    pu_photo_like.is_friend as pu_photo_like_is_friend,
+    pu_photo_like.type as pu_photo_like_type,
+    pu_photo_like.create_time as pu_photo_like_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_photo_like
+        LEFT JOIN pu_user ON pu_user.user_id = pu_photo_like.user_id
+        where pu_photo_like.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_photo_like
+        LEFT JOIN pu_user ON pu_user.user_id = pu_photo_like.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_photo_like.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="photoId != null">
+                and pu_photo_like.photo_id = #{photoId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_photo_like.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="isFriend != null">
+                and pu_photo_like.is_friend = #{isFriend,jdbcType=BIT}
+            </if>
+            <if test="type != null">
+                and pu_photo_like.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_photo_like.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_photo_like.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_photo_like
+        LEFT JOIN pu_user ON pu_user.user_id = pu_photo_like.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_photo_like.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="photoId != null">
+                and pu_photo_like.photo_id = #{photoId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_photo_like.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="isFriend != null">
+                and pu_photo_like.is_friend = #{isFriend,jdbcType=BIT}
+            </if>
+            <if test="type != null">
+                and pu_photo_like.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_photo_like.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_photo_like.id desc
+        limit 1
+    </select>
+
+    <select id="selectUserPhotoLikeIn" parameterType="java.util.Map" resultType="java.util.Map">
+        select count(*) as number, pu_photo.user_id as like_user
+        from pu_photo ,pu_photo_like
+        WHERE pu_photo.id = pu_photo_like.photo_id
+        and pu_photo_like.user_id = #{user_id}
+        and pu_photo.user_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY pu_photo.user_id
+    </select>
+
+    <select id="selectEachOtherPhotoLike" parameterType="java.util.Map" resultType="java.util.Map">
+        select phlike1.l_user, phlike1.p_user
+        from(
+        select plike.user_id as l_user, pphoto.user_id p_user
+        from `pu_photo_like` plike, `pu_photo` pphoto
+        where pphoto.`id`= plike.`photo_id`
+        and plike.type= 1) phlike1
+        LEFT JOIN(
+        select plike.user_id as l_user2, pphoto.user_id p_user2
+        from `pu_photo_like` plike, `pu_photo` pphoto
+        where pphoto.`id`= plike.`photo_id`and plike.type= 1) phlike2
+        ON phlike1.l_user= phlike2.p_user2
+        WHERE phlike1.p_user= phlike2.l_user2
+        and l_user in
+        <foreach collection="mainIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and p_user in
+        <foreach collection="matchIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="countPhotoByPhotoId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(*) as number
+        from pu_photo_like
+        WHERE pu_photo_like.photo_id = #{id}
+    </select>
+
+    <select id="userIsLke" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) as number
+        from pu_photo_like
+        WHERE pu_photo_like.photo_id = #{id}
+        AND pu_photo_like.user_id = #{userId}
+    </select>
+
+</mapper>

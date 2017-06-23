@@ -1,0 +1,154 @@
+<div class="console-sub-title">
+    用户导入
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<ul id="mytab" class="nav nav-tabs">
+    <li class="active"><a href="#userUpload" data-toggle="tab">上传用户</a></li>
+    <li><a href="#friendUpload" data-toggle="tab">添加好友</a></li>
+    <li><a href="#beTeamUpload" data-toggle="tab">自动组队</a></li>
+</ul>
+
+<div class="tab-content" style="margin-top: 20px">
+    <div class="tab-pane active" id="userUpload">
+        <div class="row">
+            <div class="col-md-6">
+                <form role="form" >
+                    <div class="form-group">
+                        <label for="excelInputFile">请选择要上传的文件<font color="red">（**目前只支持excel(97-2003)格式文件上传**）</font></label>
+                        <!--<input type="file" id="excelInputFile" file-model="excelFile" name="excelFile">-->
+                        <input id = "excelInputFile" type="file" ngf-select="" ng-model="data.file" name="file" ngf-accept="'.xls'" ngf-pattern="'.xls'">
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-danger pull-right" ng-click="upload()">提交</button>
+                    <br/>
+                    <br/>
+                    <h4><strong>备注：</strong><br/></h4>
+                    <dl>
+                        <dt>1、模板下载</dt>
+                        <dd><a style='color:blue' href="src/view/ppt_robot.xls">点击下载 </a>  &nbsp;&nbsp;&nbsp;&nbsp;单元格格式为<strong>文本</strong><br/></dd>
+                        <dt>2、模板Sheet1页为要进行添加的用户，格式如下：</dt>
+                        <dd>
+                            手机号码	|昵称	|出生日期	|性别	|兴趣1	|兴趣2	|职业	|个人说明	|照片文件夹	|照片<br/>
+                            10000111001	|糖糖兒babyyyy	|1991-12-12	|F	|跑步	|羽毛球	|IT	|我想要稳稳的幸福	|121	|01.jpg,截图96.jpg,截图97.jpg,截图98.jpg<br/>
+                            说明：F--男  M--女<br/>
+                            照片文件夹：对应文件服务器上user/robot<br/>
+                            照片：对应用户的照片（默认第一张为头像）<br/>
+                        </dd>
+                        <dt>3、模板Sheet2页为组队的省市区、约会类型，格式如下：</dt>
+                        <dd>
+                            省|province_id|市|city_id|地区|area_id|约会_id<br/>
+                            广东省|440000|广州市|20|天河区|440106|2<br/>
+                            说明：province_id、city_id、area_id为省、市、地区对应的编码<br/>
+                            约会_id关系：1--KTV  2--夜店  3--清吧  4--所有类型<br/></dd>
+                        <dt>4、好友关系、组队说明</dt>
+                        <dd>
+                            根据上传用户数据量，按照2人进行分组，添加其他用户为好友，并进行组队；<br/>
+                            当剩余用户为1人时，只生成用户信息，不生成好友、队伍关系。<br/>
+                        </dd>
+                        <dt>5、建议每次导入数量不超过20条，并每次导入数据为同一性别</dt>
+
+                    </dl>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="friendUpload">
+        <form role="form">
+            <div class="form-group">
+                <label for="excelInputFile">请选择要上传的文件<font color="red">（**请上传txt文件**）</font></label>
+                <!--<input type="file" id="excelInputFile" file-model="excelFile" name="excelFile">-->
+                <input id = "friendFile" type="file" ngf-select="" ng-model="data.friendFile" name="file" ngf-accept="'.txt'" ngf-pattern="'.txt'">
+            </div>
+            <div class="form-group">
+                <label>类型:</label>
+                <label class="radio-inline">
+                    <input type="radio" name="userTypeRadios" id="inlineRadio1" value="1" ng-model="userType" ng-checked="true" required> 用户ID
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="userTypeRadios" id="inlineRadio2" value="2" ng-model="userType"> 手机号码
+                </label>
+            </div>
+            <div class="form-group">
+                <label>方式:</label>
+                <label class="radio-inline">
+                    <input type="radio" name="actionTypeRadios" id="inlineRadio3" value="1" ng-model="actionType" ng-checked="true" required> 申请添加
+                </label>
+                <label class="radio-inline">
+
+                    <input type="radio" name="actionTypeRadios" id="inlineRadio4" value="2" ng-model="actionType"> 直接添加
+                </label>
+            </div>
+            <button type="submit" class="btn btn-sm btn-danger pull-right" ng-click="uploadFriend()">提交</button>
+            <br/>
+            <br/>
+            <h4><strong>备注：</strong><br/></h4>
+            <dl>
+                <dt>1、导入文件模板格式如下（用“,”分割（英文格式））：</dt>
+                <dd>
+                    600044,603506 或 13430222222，13430224444
+                </dd>
+                <dt>3、导入说明：</dt>
+                <dd>
+                    比例：600044,603506,603507<br/>
+                    说明：600044申请添加603506,603507为好友
+                </dd>
+            </dl>
+        </form>
+    </div>
+    <div class="tab-pane" id="beTeamUpload">
+        <form role="form">
+            <div class="form-group">
+                <label for="excelInputFile">请选择要上传的文件<font color="red">（**请上传txt文件**）</font></label>
+                <!--<input type="file" id="excelInputFile" file-model="excelFile" name="excelFile">-->
+                <input id = "groupFile" type="file" ngf-select="" ng-model="data.groupFile" name="file" ngf-accept="'.txt'" ngf-pattern="'.txt'">
+            </div>
+            <div class="form-group">
+                <label>类型:</label>
+                <label class="radio-inline">
+                    <input type="radio" name="userTypeRadios" value="1" ng-model="userType" ng-checked="true" required> 用户ID
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="userTypeRadios" value="2" ng-model="userType"> 手机号码
+                </label>
+            </div>
+            <div class="form-group">
+                <label>活动类型:</label>
+                <select class="form-control" ng-model="bar" ng-options="c.name for c in barList">
+                </select>
+                <label>性别:</label>
+                <select class="form-control" ng-model="sex">
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                    <option value="2">混合</option>
+                </select>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>地区:</label>
+                <div cust-location data-ng-model="location"></div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-danger pull-right" ng-click="uploadGroup()">提交</button>
+            <br/>
+            <br/>
+            <h4><strong>备注：</strong><br/></h4>
+            <dl>
+                <dt>1、导入文件模板格式如下（用“,”分割（英文格式））：</dt>
+                <dd>
+                    600044,603506 或 13430222222，13430224444
+                </dd>
+                <dt>3、导入说明：</dt>
+                <dd>
+                    比例：600044,603506,603507<br/>
+                    说明：600044为队长，603506,603507为队员
+                </dd>
+                <dt>4、注意：</dt>
+                <dd>
+                    暂时导入未做成员校验，导入前先自行确认导入数据是否正确。
+                </dd>
+            </dl>
+        </form>
+    </div>
+</div>
+

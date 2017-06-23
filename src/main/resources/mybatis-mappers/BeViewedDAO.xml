@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.BeViewedDAO" >
+  <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.BeViewed" >
+    <id column="pu_be_viewed_id" property="id" jdbcType="BIGINT" />
+    <result column="pu_be_viewed_user_id" property="userId" jdbcType="BIGINT" />
+    <result column="pu_be_viewed_be_view_user_id" property="beViewUserId" jdbcType="BIGINT" />
+    <result column="pu_be_viewed_type" property="type" jdbcType="INTEGER" />
+    <result column="pu_be_viewed_create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="tableProperty" >
+    pu_be_viewed.id as pu_be_viewed_id, pu_be_viewed.user_id as pu_be_viewed_user_id, 
+    pu_be_viewed.be_view_user_id as pu_be_viewed_be_view_user_id, pu_be_viewed.type as pu_be_viewed_type, 
+    pu_be_viewed.create_time as pu_be_viewed_create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tableProperty" />
+    from pu_be_viewed
+    where pu_be_viewed.id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+    <include refid="tableProperty" />
+    from pu_be_viewed
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="id != null" >
+        and pu_be_viewed.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null" >
+        and pu_be_viewed.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="beViewUserId != null" >
+        and pu_be_viewed.be_view_user_id = #{beViewUserId,jdbcType=BIGINT}
+      </if>
+      <if test="type != null" >
+        and pu_be_viewed.type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and pu_be_viewed.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+    order by pu_be_viewed.id desc
+  </select>
+  <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+    <include refid="tableProperty" />
+    from pu_be_viewed
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="id != null" >
+        and pu_be_viewed.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null" >
+        and pu_be_viewed.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="beViewUserId != null" >
+        and pu_be_viewed.be_view_user_id = #{beViewUserId,jdbcType=BIGINT}
+      </if>
+      <if test="type != null" >
+        and pu_be_viewed.type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and pu_be_viewed.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+    order by pu_be_viewed.id desc
+    limit 1
+  </select>
+</mapper>

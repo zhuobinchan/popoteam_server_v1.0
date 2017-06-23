@@ -1,0 +1,26 @@
+<div class="console-sub-title">
+    密码修改
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form role="form">
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label for="oldPsw" class="col-md-2 control-label">旧密码：</label>
+                    <input type="password" class="form-control" id="oldPsw" placeholder="旧密码" ng-model="admin.oldPsw"
+                           required>
+                    <label for="newPsw" class="col-md-2 control-label">新密码：</label>
+                    <input type="password" class="form-control" id="newPsw" placeholder="新密码" ng-model="admin.newPsw"
+                           required>
+                </div>
+                <button type="submit" class="btn btn-sm btn-danger pull-right" ng-click="updatePsw()">修改</button>
+            </div>
+
+        </form>
+
+        <!--<input type="file" ngf-select="" ng-model="data.file" name="file" ngf-accept="'.xls'" ngf-pattern="'.xls'">-->
+        <!--<button ng-click="upload()">upload</button>-->
+
+    </div>
+</div>

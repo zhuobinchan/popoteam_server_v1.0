@@ -1,0 +1,52 @@
+<div class="console-sub-title">
+    用户量统计
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+
+<ul id="mytab" class="nav nav-tabs">
+    <li class="active"><a href="#basic" data-toggle="tab" ng-click = "search(1)">基本统计</a></li>
+    <li><a href="#interest" data-toggle="tab" ng-click = "search(2)">兴趣统计</a></li>
+    <li><a href="#job" data-toggle="tab" ng-click = "search(3)">职业统计</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="basic">
+        <div class="form-inline search-con" style="margin-top: 10px;margin-left: 10px;margin-right: 10px ;">
+            <span style="margin-left: 10px;">统计方式</span>
+
+            <select class="form-control" ng-model="type">
+                <option value="1">按月</option>
+                <option value="2">按日</option>
+                <option value="3">按本周</option>
+                <option value="4">按上一周</option>
+            </select>
+
+            <button type="button" class="btn btn-default" ng-click="searchParam()">查询</button>
+        </div>
+        <div class="form-inline clearfix" style="margin-bottom: 10px;">
+            <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="exportExcel()">
+                导出
+            </button>
+        </div>
+        <div ui-grid="gridBasicOptions" ui-grid-selection ui-grid-pagination ui-grid-exporter class="grid" style="height:400px;"></div>
+    </div>
+
+    <div class="tab-pane" id="interest">
+        <div class="form-inline clearfix" style="margin-bottom: 10px;">
+            <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="exportMonthData(1)">
+                导出
+            </button>
+        </div>
+        <div ui-grid="gridInterestOptions" ui-grid-selection ui-grid-pagination ui-grid-exporter class="grid" style="height:400px;"></div>
+    </div>
+    <div class="tab-pane" id="job">
+        <div class="form-inline clearfix" style="margin-bottom: 10px;">
+            <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="exportMonthData(2)">
+                导出
+            </button>
+        </div>
+        <div ui-grid="gridJobOptions" ui-grid-selection ui-grid-pagination ui-grid-exporter class="grid" style="height:400px;"></div>
+    </div>
+</div>
+

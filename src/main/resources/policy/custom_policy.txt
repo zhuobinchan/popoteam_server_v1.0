@@ -1,0 +1,15 @@
+{
+  "Statement": [
+    {
+      "Action": [
+        "oss:GetObject",
+        "oss:PutObject",
+        "oss:AbortMultipartUpload",
+        "oss:ListObjects"
+      ],
+      "Effect": "Allow",
+      "Resource": ["acs:oss:*:*:bucket-puputuan/puputuan/*"]
+    }
+  ],
+  "Version": "1"
+}

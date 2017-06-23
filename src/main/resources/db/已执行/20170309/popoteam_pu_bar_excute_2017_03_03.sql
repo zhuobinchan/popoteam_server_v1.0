@@ -1,0 +1,1 @@
+ALTER TABLE popoteam.pu_bar ADD is_expire INT(11) DEFAULT 0 NULL;

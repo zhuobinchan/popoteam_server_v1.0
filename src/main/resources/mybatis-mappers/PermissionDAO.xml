@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geetion.generic.permission.dao.PermissionDAO">
+
+    <resultMap id="BaseResultMap" type="com.geetion.generic.permission.pojo.Permission">
+
+        <id column="geetion_permission_id" property="id" jdbcType="BIGINT"/>
+        <result column="geetion_permission_permission" property="permission" jdbcType="VARCHAR"/>
+        <result column="geetion_permission_name" property="name" jdbcType="VARCHAR"/>
+        <result column="geetion_permission_extra" property="extra" jdbcType="VARCHAR"/>
+        <result column="geetion_permission_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <sql id="tableProperty">
+        geetion_permission.id AS geetion_permission_id,
+        geetion_permission.permission AS geetion_permission_permission,
+        geetion_permission.name AS geetion_permission_name,
+        geetion_permission.extra AS geetion_permission_extra,
+        geetion_permission.create_time AS geetion_permission_create_time
+    </sql>
+
+    <select id="selectPk" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_permission
+        WHERE geetion_permission.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_permission
+    </select>
+
+    <select id="selectParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_permission
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_permission.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="permission != null">
+                AND geetion_permission.permission = #{permission,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                AND geetion_permission.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="extra != null">
+                AND geetion_permission.extra = #{extra,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                AND geetion_permission.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by geetion_permission.create_time
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM geetion_permission
+        WHERE geetion_permission.id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.geetion.generic.permission.pojo.Permission"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO geetion_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permission != null">
+                permission,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="extra != null">
+                extra,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="permission != null">
+                #{permission,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="extra != null">
+                #{extra,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.geetion.generic.permission.pojo.Permission">
+        UPDATE geetion_permission
+        <trim suffixOverrides=",">
+            <set>
+                <if test="permission != null">
+                    permission = #{permission,jdbcType=VARCHAR},
+                </if>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="extra != null">
+                    extra = #{extra,jdbcType=VARCHAR},
+                </if>
+            </set>
+        </trim>
+        WHERE geetion_permission.id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updateParam" parameterType="java.util.Map">
+        UPDATE geetion_permission
+        <set>
+            <if test="permission != null">
+                permission = #{permission,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="extra != null">
+                extra = #{extra,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_permission.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="permission != null">
+                AND permission = #{permission,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                AND name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="extra != null">
+                AND extra = #{password,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </update>
+</mapper>

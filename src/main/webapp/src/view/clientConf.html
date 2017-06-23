@@ -1,0 +1,41 @@
+<div class="console-sub-title">
+  客户端设置
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix" style="line-height: 31px;">
+        广告轮播
+        <button class="btn btn-sm btn-danger pull-right" ng-click="changeSetting()">设置</button>
+      </div>
+      <div class="panel-body" style="min-height: 320px;">
+        <div class="row mb10">
+          <div class="col-md-8 text-center"><h4>修改</h4></div>
+          <div class="col-md-4 text-center"><h4>当前</h4></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">广告图页数上限：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateObj.advertisementPages"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="oldSetting.advertisementPages+'页'"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">
+              <i class="fa fa-question-circle text-info" aria-hidden="true" title="设置为0则不轮播"></i>
+              轮播间隔时间：
+            </div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateObj.carouselInterval"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="oldSetting.carouselInterval+'s'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

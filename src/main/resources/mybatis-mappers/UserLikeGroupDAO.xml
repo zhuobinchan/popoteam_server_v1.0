@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UserLikeGroupDAO" >
+  <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.UserLikeGroup" >
+    <id column="pu_user_like_group_id" property="id" jdbcType="BIGINT" />
+    <result column="pu_user_like_group_group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="pu_user_like_group_like_group_id" property="likeGroupId" jdbcType="VARCHAR" />
+    <result column="pu_user_like_group_user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="pu_user_like_group_is_like" property="isLike" jdbcType="INTEGER" />
+    <result column="pu_user_like_group_create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+  </resultMap>
+  <sql id="tableProperty" >
+    pu_user_like_group.id as pu_user_like_group_id,
+    pu_user_like_group.group_id as pu_user_like_group_group_id,
+    pu_user_like_group.like_group_id as pu_user_like_group_like_group_id,
+    pu_user_like_group.user_id as pu_user_like_group_user_id,
+    pu_user_like_group.is_like as pu_user_like_group_is_like,
+    pu_user_like_group.create_time as pu_user_like_group_create_time
+  </sql>
+  <select id="selectParam" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="tableProperty" />
+    from pu_user_like_group
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="id != null">
+        and pu_user_like_group.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="groupId != null">
+        and pu_user_like_group.group_id = #{groupId,jdbcType=BIGINT}
+      </if>
+      <if test="likeGroupId != null">
+        and pu_user_like_group.like_group_id = #{likeGroupId,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and pu_user_like_group.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="isLike != null">
+        and pu_user_like_group.is_like = #{isLike,jdbcType=INTEGER}
+      </if>
+    </trim>
+
+  </select>
+
+  <update id="updateToInvalid" parameterType="java.util.Map">
+        update pu_user_like_group
+        <set>
+          <if test="isLike != null">
+            pu_user_like_group.is_like = #{isLike,jdbcType=INTEGER}
+          </if>
+        </set>
+        where pu_user_like_group.group_id = #{groupId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

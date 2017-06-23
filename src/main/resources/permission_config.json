@@ -1,0 +1,7 @@
+{
+  "AccessKeyID": "F3jtWvuDIyOhiHrG",
+  "AccessKeySecret": "Eu9zTWErCs0AzFc4qvqIYI29QcqJGY",
+  "RoleArn": "acs:ram::1602256906844904:role/puputuan-admin",
+  "TokenExpireTime": "3600",
+  "PolicyFile": "policy/custom_policy.txt"
+}

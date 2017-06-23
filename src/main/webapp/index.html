@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>蒲蒲团·管理后台</title>
+    <link href="/favicon.ico" type="image/x-icon" rel="icon"/>
+    <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+
+    <link href="dep/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="dep/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
+    <link href="dep/font-awesome-4.5.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="dep/sweetalert/sweet-alert.css" type="text/css" rel="stylesheet" />
+    <link href="dep/ng-grid/ui-grid.min.css" type="text/css" rel="stylesheet" />
+    <link href="src/css/common.css" type="text/css" rel="stylesheet">
+    <link href="src/css/index.css" type="text/css" rel="stylesheet">
+    <link href="src/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="src/css/tree-control.css" rel="stylesheet" type="text/css"/>
+    <link href="src/css/tree-control-attribute.css" rel="stylesheet" type="text/css"/>
+
+</head>
+
+<!--<body data-ng-controller="AuthCtrl" style="height:auto">-->
+<body>
+    <div data-ng-include="'src/tpl/console-header.tpl.html'"></div>
+    <div data-ng-include="'src/tpl/console-nav.tpl.html'" class="console-nav-con"></div>
+    <div data-ui-view class="console-ng-view clearfix">
+
+    </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript" src="src/js/constant.js"></script>
+<script type="text/javascript" src="dep/sweetalert/sweet-alert.min.js"></script>
+<!-- RequireJS Script -->
+<script type="text/javascript" src="dep/requirejs-2.1.22/require.min.js" data-main="src/js/main.js"></script>
+<script type="text/javascript" src="dep/echarts-2.2.7/build/dist/echarts-all.js"></script>
+<script type="text/javascript" src="dep/ng-grid/vfs_fonts.js"></script>
+<script type="text/javascript" src="dep/ng-grid/csv.js"></script>

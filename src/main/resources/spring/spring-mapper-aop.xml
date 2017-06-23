@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+             http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/tx
+             http://www.springframework.org/schema/tx/spring-tx.xsd
+             http://www.springframework.org/schema/aop
+             http://www.springframework.org/schema/aop/spring-aop.xsd
+             http://www.springframework.org/schema/context
+             http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false">
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- Specifies an XML bean definition resource to import -->
+    <import resource="spring-mapper-jdbc.xml"/>
+
+    <tx:annotation-driven transaction-manager="txManager" mode="proxy"/>
+
+    <!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean below) -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <!-- the transactional semantics... -->
+        <tx:attributes>
+            <!-- all methods starting with 'get' are read-only -->
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <!-- other methods use the default transaction settings (see below) -->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- ensure that the above transactional advice runs for any execution
+      of an operation defined by the Service interface -->
+    <aop:config>
+        <aop:pointcut id="serviceOperation"
+                      expression="execution(* *..service..*Service.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation"/>
+    </aop:config>
+
+    <!-- similarly, don't forget the PlatformTransactionManager -->
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath*:mybatis-mappers/*.xml</value>
+            </array>
+        </property>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!--<property name="typeAliasesPackage" value="com.geetion.*.dao, com.geetion.generic.*.dao"/>-->
+        <property name="plugins">
+            <array>
+                <!-- 加载分页插件 -->
+                <bean class="com.github.pagehelper.PageHelper">
+                    <!-- 这里的几个配置主要演示如何使用，如果不理解，一定要去掉下面的配置 -->
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                            reasonable=true
+                            offsetAsPageNum=true
+                            rowBoundsWithCount=true
+                            pageSizeZero=true
+                            params=pageNum=start;pageSize=limit;pageSizeZero=zero;reasonable=heli;count=contsql
+                            <!--supportMethodsArguments=true-->
+                            <!--autoRuntimeDialect=true-->
+                        </value>
+                    </property>
+                </bean>
+                <!-- 加载驼峰转换输出插件 -->
+                <bean class="com.geetion.puputuan.common.mybatis.CameHumpInterceptor"/>
+                <!-- 加载性能监控插件 -->
+                <!--<bean class="com.geetion.puputuan.common.mybatis.PerformanceInterceptor"/>-->
+            </array>
+        </property>
+    </bean>
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.geetion.**.dao"/>
+        <!-- 3.2.2版本新特性，markerInterface可以起到mappers配置的作用，详细情况需要看Marker接口类 -->
+        <property name="annotationClass" value="org.springframework.stereotype.Repository" />
+        <property name="properties">
+            <value>
+                mappers=com.geetion.puputuan.dao.base.BaseDAO
+            </value>
+        </property>
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+</beans>

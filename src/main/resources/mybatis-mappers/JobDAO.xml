@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.JobDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Job">
+        <id column="pu_job_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_job_name" property="name" jdbcType="VARCHAR"/>
+        <result column="pu_job_identify" property="identify" jdbcType="BIGINT"/>
+        <result column="pu_job_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_job_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_job_have_select" property="haveSelect" jdbcType="BIT"/>
+        <result column="pu_job_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_job.id as pu_job_id,
+        pu_job.name as pu_job_name,
+        pu_job.identify as pu_job_identify,
+        pu_job.type as pu_job_type,
+        pu_job.status as pu_job_status,
+        pu_job.create_time as pu_job_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_job
+        where pu_job.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_job
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_job.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_job.name LIKE concat('%', #{name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="identify != null">
+                and pu_job.identify = #{identify,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_job.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_job.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_job.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_job.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_job
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_job.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_job.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="identify != null">
+                and pu_job.identify = #{identify,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_job.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_job.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_job.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_job.id desc
+        limit 1
+    </select>
+
+    <update id="updateBatch" parameterType="java.util.Map">
+        UPDATE pu_job
+        <set>
+            <if test="name != null">
+                pu_job.name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="identify != null">
+                pu_job.identify = #{identify,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                pu_job.type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                pu_job.status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        <where>
+            <if test="ids != null">
+                pu_job.id IN(
+                <foreach collection="ids" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </update>
+
+    <!-- 查询自己的个人职业，其中包含了 自己没有选择但是是属于系统的职业 -->
+    <select id="selectParamWithSystem" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="tableProperty"/>,
+        if(pu_job_user.job_id = pu_job.id, TRUE, FALSE) AS pu_job_have_select
+        FROM pu_user
+        LEFT JOIN pu_job_user ON pu_job_user.user_id = pu_user.user_id
+        <!-- 查询没有被屏蔽的职业 以及系统的职业 -->
+        LEFT JOIN pu_job ON (pu_job.id = pu_job_user.job_id OR pu_job.type = 1) AND
+        pu_job.status = 1
+        where pu_user.user_id = #{userId,jdbcType=BIGINT}
+        GROUP BY pu_job.id
+    </select>
+
+</mapper>

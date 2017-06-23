@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.NoticeDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Notice">
+        <id column="pu_notice_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_notice_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_notice_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_notice_param" property="param" jdbcType="LONGVARCHAR"/>
+        <result column="pu_notice_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_notice_announcement_id" property="announcementId" jdbcType="BIGINT"/>
+        <result column="pu_notice_is_read" property="isRead" jdbcType="TINYINT"/>
+        <result column="pu_notice_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_notice_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_notice.id as pu_notice_id,
+        pu_notice.user_id as pu_notice_user_id,
+        pu_notice.content as pu_notice_content,
+        pu_notice.param as pu_notice_param,
+        pu_notice.type as pu_notice_type,
+        pu_notice.announcement_id as pu_notice_announcement_id,
+        pu_notice.is_read as pu_notice_is_read,
+        pu_notice.status as pu_notice_status,
+        pu_notice.create_time as pu_notice_create_time
+    </sql>
+
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO pu_notice
+        (user_id,content,param,type,announcement_id)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            ( #{item.userId},#{item.content},#{item.param},#{item.type},#{item.announcementId})
+        </foreach>
+    </insert>
+
+    <select id="countNum" parameterType="com.geetion.puputuan.model.Notice" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM pu_notice
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_notice.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_notice.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_notice.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="param != null">
+                and pu_notice.param = #{param,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_notice.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="announcementId != null">
+                and pu_notice.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="isRead != null">
+                and pu_notice.is_read = #{isRead,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                and pu_notice.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_notice.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </select>
+
+    <update id="updateByParam" parameterType="com.geetion.puputuan.model.Notice">
+        UPDATE pu_notice
+        <set>
+            <if test="content != null">
+                pu_notice.content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="param != null">
+                pu_notice.param = #{param,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="type != null">
+                pu_notice.type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isRead != null">
+                pu_notice.is_read = #{isRead,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                pu_notice.status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                and pu_notice.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_notice.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="announcementId != null">
+                and pu_notice.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </update>
+
+    <delete id="delNoticeBatch" parameterType="java.util.List">
+        delete from pu_notice
+        where id in
+        <foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delNoticeByUserId" parameterType="java.lang.Long">
+        DELETE
+        FROM pu_notice
+        WHERE pu_notice.user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+
+    <select id="selectNoticeByDate" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_notice
+        <trim prefix="where" prefixOverrides="and|or">
+
+            <if test="begin != null">
+                and pu_notice.create_time  &lt; #{begin,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_notice.id desc
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_notice
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_notice.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_notice.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_notice.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="param != null">
+                and pu_notice.param = #{param,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_notice.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="announcementId != null">
+                and pu_notice.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="isRead != null">
+                and pu_notice.is_read = #{isRead,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                and pu_notice.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_notice.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_notice.id desc
+    </select>
+</mapper>

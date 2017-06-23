@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.InterestDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Interest">
+        <id column="pu_interest_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_interest_name" property="name" jdbcType="VARCHAR"/>
+        <result column="pu_interest_identify" property="identify" jdbcType="BIGINT"/>
+        <result column="pu_interest_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_interest_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_interest_have_select" property="haveSelect" jdbcType="BIT"/>
+        <result column="pu_interest_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_interest.id as pu_interest_id,
+        pu_interest.name as pu_interest_name,
+        pu_interest.identify as pu_interest_identify,
+        pu_interest.type as pu_interest_type,
+        pu_interest.status as pu_interest_status,
+        pu_interest.create_time as pu_interest_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_interest
+        where pu_interest.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_interest
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_interest.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_interest.name LIKE concat('%', #{name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="identify != null">
+                and pu_interest.identify = #{identify,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_interest.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_interest.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_interest.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_interest.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_interest
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_interest.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_interest.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="identify != null">
+                and pu_interest.identify = #{identify,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_interest.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_interest.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_interest.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_interest.id desc
+        limit 1
+    </select>
+
+    <update id="updateBatch" parameterType="java.util.Map">
+        UPDATE pu_interest
+        <set>
+            <if test="name != null">
+                pu_interest.name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="identify != null">
+                pu_interest.identify = #{identify,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                pu_interest.type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                pu_interest.status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        <where>
+            <if test="ids != null">
+                pu_interest.id IN(
+                <foreach collection="ids" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </update>
+
+    <!-- 查询自己的个人兴趣，其中包含了 自己没有选择但是是属于系统的兴趣 -->
+    <select id="selectParamWithSystem" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="tableProperty"/>,
+        if(pu_interest_user.interest_id = pu_interest.id, TRUE, FALSE) AS pu_interest_have_select
+        FROM pu_user
+        LEFT JOIN pu_interest_user ON pu_interest_user.user_id = pu_user.user_id
+        <!-- 查询没有被屏蔽的职业 以及系统的职业 -->
+        LEFT JOIN pu_interest ON (pu_interest.id = pu_interest_user.interest_id OR pu_interest.type = 1) AND
+        pu_interest.status = 1
+        where pu_user.user_id = #{userId,jdbcType=BIGINT}
+        GROUP BY pu_interest.id
+    </select>
+
+</mapper>

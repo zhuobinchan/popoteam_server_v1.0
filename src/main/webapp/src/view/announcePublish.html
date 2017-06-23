@@ -1,0 +1,135 @@
+<link href="../../dep/wangEditor-2.1.23/dist/css/wangEditor.css" type="text/css" rel="stylesheet" />
+<div class="console-sub-title">
+  发表公告
+</div>
+
+<ul id="mytab" class="nav nav-tabs">
+    <li class="active"><a href="#basic" data-toggle="tab" ng-click = "change(1)">按地区</a></li>
+    <li><a href="#interest" data-toggle="tab" ng-click = "change(2)">按用户</a></li>
+</ul>
+
+
+<div class="tab-content">
+    <div class="tab-pane active" id="basic">
+        <div class="panel panel-default">
+            <div class="panel-heading">选择地区</div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-danger" ng-click="selectCities()">选择地区
+                </button>
+                <span>不添加等于全选</span>
+
+                <div class="selected-list-con">
+                    <h5>已选地区：</h5>
+                    <div class="row">
+                        <div class="selected-wrap col-md-3" ng-repeat="d in selectedDistricts">
+                            <div class="selected-province-con">
+                                <h5 class="selected-province-title">{{d.province.name}}
+                                </h5>
+                                <span class="selected-city-item" ng-repeat="c in d.cities">{{c.name}}
+                                </span>
+                    <span class="selected-city-item"
+                          ng-show="d.province.isSelectedAll">{{d.province.name}}&nbsp;所有地区</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="interest">
+        <div class="panel panel-default">
+            <div class="panel-heading">选择用户</div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="userFile">请选择要上传的文件<font color="red">（**目前只支持txt文件上传，一个用户identify/手机号码为一行，不要输入空白行，每次导入数据不超200**）</font></label>
+                            <input id = "userFile" type="file" ngf-select="" ng-model="file" name="file" ngf-accept="'.txt'" ngf-pattern="'.txt'">
+                        </div>
+                        <div class="form-group">
+                            <label>类型:</label>
+                            <label class="radio-inline">
+                                <input type="radio" name="typeRadios" id="inlineRadio1" value="1" ng-model="userType" ng-checked="true" required> 用户ID
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="typeRadios" id="inlineRadio2" value="2" ng-model="userType"> 手机号码
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="console-content">
+
+    <div class="panel panel-default">
+        <h4><strong>备注：</strong><br/></h4>
+        <dl>
+            <dt>1、在编辑公告时需要注意：</dt>
+            <dd>
+                2、没有填写<strong style="color: red"> 公告网址 </strong>，<strong style="color: red"> 富文本编辑区 </strong>则会保存下来
+            </dd>
+            <dt>
+                3、如果填写了<strong style="color: red"> 公告网址 </strong>，<strong style="color: red"> 富文本编辑区 </strong>则不会保存
+            </dt>
+        </dl>
+
+        <div class="panel-heading">编辑公告</div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="panel-body">
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">标题:</label>
+
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" ng-model="announceObj.title"
+                                   maxlength="500">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">内容:</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" ng-model="announceObj.content" style="width: 100%;height: 100px" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">点击以后的网页内容(富文本编辑区):</label>
+                        <div class="col-md-8">
+                            <div id="myEditor" style="height:400px;max-height:500px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">公告网址:</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" ng-model="announceObj.url" style="width: 100%;height: 100px" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">公告缩略图:</label>
+
+                        <div class="col-md-8">
+                            <input id = "imageFile" type="file" ngf-select="" ng-model="imageFile" name="file" ngf-accept="'*'" ngf-pattern="'*'">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">&nbsp;</label>
+
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-danger" ng-disabled="isCreate"
+                                    ng-click="addAnnounce()" ng-bind="announceObj.id?'编辑':'发布'"></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- 地区选择 -->
+<div multi-cities-dire data-selected-districts="selectedDistricts"></div>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.FrequentLocationDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.FrequentLocation">
+        <id column="pu_frequent_location_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_frequent_location_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_frequent_location_location_id" property="locationId" jdbcType="BIGINT"/>
+        <result column="pu_frequent_location_times" property="times" jdbcType="INTEGER"/>
+        <result column="pu_frequent_location_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+    pu_frequent_location.id as pu_frequent_location_id, pu_frequent_location.user_id as pu_frequent_location_user_id, 
+    pu_frequent_location.location_id as pu_frequent_location_location_id, pu_frequent_location.times as pu_frequent_location_times, 
+    pu_frequent_location.create_time as pu_frequent_location_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_frequent_location
+        where pu_frequent_location.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_frequent_location
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_frequent_location.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_frequent_location.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_frequent_location.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="times != null">
+                and pu_frequent_location.times = #{times,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_frequent_location.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_frequent_location.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_frequent_location
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_frequent_location.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_frequent_location.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_frequent_location.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="times != null">
+                and pu_frequent_location.times = #{times,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_frequent_location.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_frequent_location.id desc
+        limit 1
+    </select>
+</mapper>

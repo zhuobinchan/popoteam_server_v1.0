@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.MessageHisDAO">
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO pu_message_his
+        (user_id,content,param,type,announcement_id,is_read,status,create_time)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            ( #{item.userId},#{item.content},#{item.param},#{item.type},#{item.announcementId},#{item.isRead},#{item.status},#{item.createTime})
+        </foreach>
+    </insert>
+
+
+</mapper>

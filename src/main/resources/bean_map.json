@@ -1,0 +1,14 @@
+{
+  "cgpMedolUser": "com.geetion.puputuan.model.User",
+  "cgpModelBar": "com.geetion.puputuan.model.Bar",
+  "cgpMedolAdvertisement":"com.geetion.puputuan.model.Advertisement",
+
+
+  "cgpDaoBar": "com.geetion.puputuan.dao.BarDAO",
+  "cgpDaoAdvertisement":"com.geetion.puputuan.dao.AdvertisementDAO",
+
+
+  "juMap": "java.util.Map"
+}
+
+

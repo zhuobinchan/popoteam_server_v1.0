@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.AdminDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Admin">
+        <id column="pu_admin_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_admin_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_admin_nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="pu_admin_head_id" property="headId" jdbcType="BIGINT"/>
+        <result column="pu_admin_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_admin_type" property="type" jdbcType="INTEGER"/>
+
+        <association property="userBase" column="pu_admin_user_id"
+                     javaType="com.geetion.generic.userbase.pojo.UserBase"
+                     resultMap="com.geetion.generic.userbase.dao.UserBaseDAO.BaseResultMap"/>
+
+        <collection property="roleList" resultMap="com.geetion.generic.permission.dao.RoleDAO.BaseResultMap"
+                    ofType="com.geetion.generic.permission.pojo.Role"
+                    javaType="java.util.List"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_admin.id as pu_admin_id,
+        pu_admin.user_id as pu_admin_user_id,
+        pu_admin.nick_name as pu_admin_nick_name,
+        pu_admin.head_id as pu_admin_head_id,
+        pu_admin.create_time as pu_admin_create_time,
+        pu_admin.type as pu_admin_type
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>
+        from pu_admin
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_admin.user_id
+        where pu_admin.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>
+        from pu_admin
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_admin.user_id
+        where pu_admin.user_id = #{userId,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.permission.dao.RoleDAO.tableProperty"/>
+        from pu_admin
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_admin.user_id
+        LEFT JOIN geetion_user_role_relative ON pu_admin.user_id = geetion_user_role_relative.user_id
+        LEFT JOIN geetion_role ON geetion_user_role_relative.role_id = geetion_role.id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_admin.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_admin.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="nickName != null">
+                and pu_admin.nick_name = #{nickName,jdbcType=VARCHAR}
+            </if>
+            <if test="headId != null">
+                and pu_admin.head_id = #{headId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_admin.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="type != null">
+                and pu_admin.type = #{type,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by pu_admin.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>
+        from pu_admin
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_admin.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_admin.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_admin.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="nickName != null">
+                and pu_admin.nick_name = #{nickName,jdbcType=VARCHAR}
+            </if>
+            <if test="headId != null">
+                and pu_admin.head_id = #{headId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_admin.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="type != null">
+                and pu_admin.type = #{type,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by pu_admin.id desc
+        limit 1
+    </select>
+
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UserFavouritePicDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.jsonModel.UserFavouritePic">
+        <id column="pu_favourite_pic_id" property="id" jdbcType="BIGINT" />
+        <result column="pu_favourite_pic_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_favourite_pic_album_photo_id" property="albumPhotoId" jdbcType="BIGINT"/>
+        <result column="pu_favourite_pic_image_id" property="imageId" jdbcType="BIGINT"/>
+        <result column="pu_favourite_pic_image_url" property="imageUrl" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_favourite_pic.id as pu_favourite_pic_id,
+        pu_favourite_pic.user_id as pu_favourite_pic_user_id,
+        pu_favourite_pic.album_photo_id as pu_favourite_pic_album_photo_id,
+        pu_favourite_pic.image_id as pu_favourite_pic_image_id,
+        pu_favourite_pic.image_url as pu_favourite_pic_image_url
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_favourite_pic
+        where pu_favourite_pic.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_favourite_pic
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_favourite_pic.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_favourite_pic.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="albumPhotoId != null">
+                and pu_favourite_pic.album_photo_id = #{albumPhotoId,jdbcType=BIGINT}
+            </if>
+            <if test="imageId != null">
+                and pu_favourite_pic.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="imageUrl != null">
+                and pu_favourite_pic.image_url = #{imageUrl,jdbcType=LONGVARCHAR}
+            </if>
+        </trim>
+        order by pu_favourite_pic.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_favourite_pic
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_favourite_pic.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_favourite_pic.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="albumPhotoId != null">
+                and pu_favourite_pic.album_photo_id = #{albumPhotoId,jdbcType=BIGINT}
+            </if>
+            <if test="imageId != null">
+                and pu_favourite_pic.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="imageUrl != null">
+                and pu_favourite_pic.image_url = #{imageUrl,jdbcType=LONGVARCHAR}
+            </if>
+        </trim>
+        order by pu_favourite_pic.id desc
+        limit 1
+    </select>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+        DELETE FROM pu_favourite_pic
+        WHERE pu_favourite_pic.user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insertBatch" parameterType="java.util.Map" useGeneratedKeys="true">
+        INSERT INTO pu_favourite_pic (user_id,album_photo_id,image_id,image_url)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId},#{item.albumPhotoId},#{item.imageId},#{item.imageUrl})
+        </foreach>
+
+    </insert>
+
+    <update id="updateBatch" parameterType="java.util.Map">
+        UPDATE pu_favourite_pic
+        <set>
+            <if test="userId != null">
+                pu_favourite_pic.user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="albumPhotoId != null">
+                pu_favourite_pic.album_photo_id = #{albumPhotoId,jdbcType=BIGINT},
+            </if>
+            <if test="imageId != null">
+                pu_favourite_pic.image_id = #{imageId,jdbcType=BIGINT},
+            </if>
+            <if test="imageUrl != null">
+                pu_favourite_pic.image_url = #{imageUrl,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        <where>
+            <if test="ids != null">
+                pu_favourite_pic.id IN(
+                <foreach collection="ids" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </update>
+
+</mapper>

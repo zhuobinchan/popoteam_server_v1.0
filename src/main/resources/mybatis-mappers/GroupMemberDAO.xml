@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.GroupMemberDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.GroupMember">
+        <id column="pu_group_member_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_group_member_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_group_member_group_id" property="groupId" jdbcType="BIGINT"/>
+        <result column="pu_group_member_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_group_member_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_group_member_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="user" column="pu_group_member_user_id"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+
+    </resultMap>
+
+    <resultMap id="BaseResultMapWithSign" type="com.geetion.puputuan.pojo.GroupMemberWithSign" extends="BaseResultMap">
+        <!-- 是否签到过 -->
+        <result column="pu_group_member_have_sign" property="haveSign" jdbcType="BIT"/>
+
+    </resultMap>
+
+
+    <sql id="tableProperty">
+    pu_group_member.id as pu_group_member_id, pu_group_member.user_id as pu_group_member_user_id, 
+    pu_group_member.group_id as pu_group_member_group_id, pu_group_member.status as pu_group_member_status, 
+    pu_group_member.type as pu_group_member_type, pu_group_member.create_time as pu_group_member_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>
+        from pu_group_member
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        where pu_group_member.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>
+        from pu_group_member
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_group_member.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_group_member.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="groupId != null">
+                and pu_group_member.group_id = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="statusList != null">
+                and pu_group_member.status in
+                <foreach collection="statusList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
+            </if>
+            <if test="type != null">
+                and pu_group_member.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_group_member.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="isRunningGroup != null">
+                and pu_group_member.group_id not in (
+                  SELECT id FROM pu_group WHERE pu_group.status in (3 , 4)
+                )
+            </if>
+        </trim>
+        order by pu_group_member.type ,pu_group_member.create_time
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>
+        from pu_group_member
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_group_member.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_group_member.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="groupId != null">
+                and pu_group_member.group_id = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                and pu_group_member.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_group_member.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_group_member.id desc
+        limit 1
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO pu_group_member (user_id,group_id,status,type)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            ( #{item.userId},#{item.groupId},#{item.status},#{item.type} )
+        </foreach>
+    </insert>
+
+
+    <!-- 查询在群组内，并且有过签到记录的用户userId -->
+    <select id="selectWithSignUserId" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        DISTINCT pu_user.user_id
+        from pu_user
+        LEFT JOIN pu_group_member ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN pu_sign ON pu_sign.user_id = pu_user.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="groupId != null">
+                and pu_group_member.group_id = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="activityId != null">
+                OR pu_sign.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </select>
+
+
+    <!-- 查询群组成员，并且查询该成员是否已签到过  -->
+    <select id="selectWithSign" parameterType="java.util.Map" resultMap="BaseResultMapWithSign">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>,
+        if(sign_person.user_id = pu_user.user_id, 1, 0) AS pu_group_member_have_sign
+        from pu_group_member
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+
+        <!-- 查询该用户是否有签到过 -->
+        LEFT JOIN (SELECT pu_group.id AS group_id, pu_sign.user_id AS user_id FROM pu_sign
+        LEFT JOIN pu_activity ON pu_activity.id = pu_sign.activity_id
+        LEFT JOIN pu_group
+        ON (pu_activity.male_group_id = pu_group.id OR pu_activity.female_group_id = pu_group.id)
+        ) AS sign_person ON
+        sign_person.user_id = pu_user.user_id and sign_person.group_id = pu_group_member.group_id
+
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_group_member.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_group_member.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="groupId != null">
+                and pu_group_member.group_id = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                and pu_group_member.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_group_member.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        GROUP BY pu_user.user_id
+        order by pu_group_member.create_time
+    </select>
+
+    <update id="updateGroupMember" parameterType="com.geetion.puputuan.model.GroupMember">
+        UPDATE pu_group_member
+        <set>
+            <if test="status != null">
+                pu_group_member.status = #{status,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                pu_group_member.create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE pu_group_member.group_id = #{groupId,jdbcType=BIGINT}
+        and pu_group_member.user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByParam" parameterType="java.util.Map">
+        DELETE FROM pu_group_member
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_group_member.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_group_member.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="groupId != null">
+                and pu_group_member.group_id = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="statusList != null">
+                and pu_group_member.status in
+                <foreach collection="statusList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
+            </if>
+            <if test="type != null">
+                and pu_group_member.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_group_member.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </delete>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UpdateLocationDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.UpdateLocation">
+        <id column="pu_update_location_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_update_location_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_update_location_activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="pu_update_location_location_id" property="locationId" jdbcType="BIGINT"/>
+        <result column="pu_update_location_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_update_location_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+    pu_update_location.id as pu_update_location_id, pu_update_location.user_id as pu_update_location_user_id, 
+    pu_update_location.activity_id as pu_update_location_activity_id, pu_update_location.location_id as pu_update_location_location_id, 
+    pu_update_location.type as pu_update_location_type, pu_update_location.create_time as pu_update_location_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_update_location
+        where pu_update_location.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_update_location
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_update_location.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_update_location.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="activityId != null">
+                and pu_update_location.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_update_location.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_update_location.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_update_location.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_update_location.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_update_location
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_update_location.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_update_location.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="activityId != null">
+                and pu_update_location.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_update_location.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_update_location.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_update_location.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_update_location.id desc
+        limit 1
+    </select>
+</mapper>

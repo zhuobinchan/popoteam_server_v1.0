@@ -1,0 +1,93 @@
+<div class="console-sub-title">
+    职业标签
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+
+<div class="form-inline search-con">
+    <div class="form-group">
+        <select class="form-control" ng-model="searchParams.key">
+            <option value="name">名称</option>
+            <option value="id">标签ID</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="输入关键字"
+               ng-model="searchParams.val">
+    </div>
+    <div class="dib mlr10">
+        <label>类型:</label>
+        <label class="radio-inline">
+            <input type="radio" name="typeRadios" id="inlineRadio1" value="" ng-model="searchParams.type"> 全部
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="typeRadios" id="inlineRadio2" value="1" ng-model="searchParams.type"> 系统
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="typeRadios" id="inlineRadio3" value="0" ng-model="searchParams.type"> 自建
+        </label>
+    </div>
+    <div class="dib mlr10">
+        <label>状态:</label>
+        <label class="radio-inline">
+            <input type="radio" name="statusRadios" id="inlineRadio4" value="" ng-model="searchParams.status"> 全部
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="statusRadios" id="inlineRadio5" value="1" ng-model="searchParams.status"> 正常
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="statusRadios" id="inlineRadio6" value="0" ng-model="searchParams.status"> 屏蔽中
+        </label>
+    </div>
+
+    <button type="button" class="btn btn-default" ng-click="searchLabelsData()">筛选</button>
+    <button type="button" class="btn btn-default" ng-click="resetLabelsData()">重置</button>
+</div>
+
+<div class="form-inline clearfix" style="margin-bottom: 10px;">
+    <button type="button" class="btn btn-default pull-right ml10" data-toggle="modal" data-target="#label-detail">
+        新建
+    </button>
+    <button type="button" class="btn btn-default pull-right ml10" ng-click="chgLabelsStuta(true)">恢复</button>
+    <button type="button" class="btn btn-danger pull-right ml10" ng-click="chgLabelsStuta(false)">屏蔽</button>
+</div>
+
+<div ui-grid="jobGridOpts" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+<div class="modal " id="label-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="(label.id?'编辑':'新建')+'职业标签'"></h4>
+            </div>
+            <form class="form-horizontal" ng-submit="saveLabel()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title" class="col-md-2 control-label">名称：</label>
+
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="title" placeholder="标签名称" ng-model="label.name"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="status" class="col-md-2 control-label">状态：</label>
+
+                        <div class="col-md-10">
+                            <select class="form-control" id="status" ng-model="label.status" required
+                                    ng-options="l.val as l.txt for l in labelStutasOpts">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" ng-bind="label.id?'修改':'新建'"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

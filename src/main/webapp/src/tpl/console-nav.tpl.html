@@ -1,0 +1,123 @@
+<script>
+    $(document).ready(function(){
+        $.get('/ctrl/user/searcnUserPermission', function(data) {
+            jsonObject = JSON.parse(data);
+            jsonObject['data'].forEach(function(permission){
+                $("#" + permission).show();
+            });
+            $("li").filter(function(index){
+                return $(this).attr('ui-sref-active') == 'active' && !$(this).is(":hidden")
+            }).first().click();
+
+        });
+    });
+</script>
+<ul class="console-nav">
+    <li class="nav-group">
+        <span class="nav-group-name" data-toggle="collapse" data-target="#userManage">
+          <i class="fa fa-user" aria-hidden="true"></i>
+            用户管理
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div  id="userManage" class="collapse in">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="user" id='user' hidden="true">用户列表</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="userBlackList" id='userBlackList'>黑名单列表</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="complain" id='complain' hidden="true">投诉列表</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="usersetting" id='usersetting' hidden="true">综合设置</li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-group">
+        <span class="nav-group-name" data-toggle="collapse" data-target="#groupAndActivityManage">
+          <i class="fa fa-glass" aria-hidden="true"></i>
+            约会管理
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div  id="groupAndActivityManage" class="collapse">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="group" id='group' hidden="true">群组列表</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="activity" id='activity' hidden="true">约会列表</li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-group">
+        <span class="nav-group-name has-href" ui-sref="info"  data-toggle="collapse" data-target="#advertisementAndBarManage">
+          <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+            资讯管理
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div  id="advertisementAndBarManage" class="collapse">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="advertisement" id='advertisement'>广告</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="bar" id='bar'>活动类型</li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-group">
+        <span class="nav-group-name" data-toggle="collapse" data-target="#announceManage">
+          <i class="fa fa-bullhorn" aria-hidden="true"></i>
+            公告管理
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div  id="announceManage" class="collapse">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="announcePublish" id='announcePublish' hidden="true">发表公告</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="announceHistory" id='announceHistory' hidden="true">历史公告</li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-group">
+        <span class="nav-group-name" data-toggle="collapse" data-target="#labelManage">
+          <i class="fa fa-tags" aria-hidden="true"></i>
+            标签管理
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div  id="labelManage" class="collapse">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="interestLabel" id='interestLabel' hidden="true">兴趣标签</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="jobLabel" id='jobLabel' hidden="true">职业标签</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="fancyLabel" id='fancyLabel'>喜爱夜蒲标签</li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-group">
+        <span class="nav-group-name" data-toggle="collapse" data-target="#statisDataManage">
+          <i class="fa fa-pie-chart" aria-hidden="true"></i>
+          数据统计
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div  id="statisDataManage" class="collapse">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="statisData" id='statisData'>概览</li>
+                <!--<li class="nav-group-item" ui-sref-active="active" ui-sref="userStatisData" has-permission='jobLabel'>统计首页</li>-->
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="userStatisData" id='userStatisData' hidden="true">用户量统计</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="dailyLivingStatisData" id='dailyLivingStatisData' >活跃量统计</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="groupStatisData" id='groupStatisData' hidden="true">队伍统计</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="activityStatisData" id='activityStatisData' hidden="true">约会统计</li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-group">
+        <span class="nav-group-name" data-toggle="collapse" data-target="#cofManage">
+          <i class="fa fa-cog" aria-hidden="true"></i>
+          系统设置
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <div id="cofManage"class="collapse">
+            <ul>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="adminConf" id='adminConf' hidden="true">管理员设置</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="pswConf" id='pswConf'>修改密码</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="adminLoginHis" id='adminLoginHis' hidden="true">管理员登录查询</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="varConf" id='varConf' hidden="true">参数设置</li>
+                <!--<li class="nav-group-item" ui-sref-active="active" ui-sref="datingConf" has-permission='datingConf'>约会设置</li>-->
+                <!--<li class="nav-group-item" ui-sref-active="active" ui-sref="clientConf">客户端设置</li>-->
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="robotConf" id='robotConf' hidden="true">用户导入</li>
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="clearHuanXinConf" id='clearHuanXinConf' hidden="true">清除环信账号</li>
+                <!--<li class="nav-group-item" ui-sref-active="active" ui-sref="clientUpdate">客户端更新</li>-->
+                <!--<li class="nav-group-item">客户端更新</li>-->
+                <li class="nav-group-item" ui-sref-active="active" ui-sref="appVersion" id='appVersion'>app端版本</li>
+            </ul>
+        </div>
+    </li>
+</ul>

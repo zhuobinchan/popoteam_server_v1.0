@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.RecommendSuccessDAO" >
+  <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.RecommendSuccess" >
+    <id column="pu_recommend_success_id" property="id" jdbcType="BIGINT" />
+    <result column="pu_recommend_success_main_recommend_id" property="mainRecommendId" jdbcType="BIGINT" />
+    <result column="pu_recommend_success_match_recommend_id" property="matchRecommendId" jdbcType="BIGINT" />
+    <result column="pu_recommend_success_main_group_id" property="mainGroupId" jdbcType="BIGINT" />
+    <result column="pu_recommend_success_match_group_id" property="matchGroupId" jdbcType="BIGINT" />
+    <result column="pu_recommend_success_type" property="type" jdbcType="BIT" />
+    <result column="pu_recommend_success_create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="tableProperty" >
+    pu_recommend_success.id as pu_recommend_success_id, pu_recommend_success.main_recommend_id as pu_recommend_success_main_recommend_id, 
+    pu_recommend_success.match_recommend_id as pu_recommend_success_match_recommend_id, 
+    pu_recommend_success.main_group_id as pu_recommend_success_main_group_id, pu_recommend_success.match_group_id as pu_recommend_success_match_group_id, 
+    pu_recommend_success.type as pu_recommend_success_type, pu_recommend_success.create_time as pu_recommend_success_create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tableProperty" />
+    from pu_recommend_success
+    where pu_recommend_success.id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+    <include refid="tableProperty" />
+    from pu_recommend_success
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="id != null" >
+        and pu_recommend_success.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="mainRecommendId != null" >
+        and pu_recommend_success.main_recommend_id = #{mainRecommendId,jdbcType=BIGINT}
+      </if>
+      <if test="matchRecommendId != null" >
+        and pu_recommend_success.match_recommend_id = #{matchRecommendId,jdbcType=BIGINT}
+      </if>
+      <if test="mainGroupId != null" >
+        and pu_recommend_success.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+      </if>
+      <if test="matchGroupId != null" >
+        and pu_recommend_success.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+      </if>
+      <if test="type != null" >
+        and pu_recommend_success.type = #{type,jdbcType=BIT}
+      </if>
+      <if test="createTime != null" >
+        and pu_recommend_success.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+    order by pu_recommend_success.id desc
+  </select>
+  <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+    <include refid="tableProperty" />
+    from pu_recommend_success
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="id != null" >
+        and pu_recommend_success.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="mainRecommendId != null" >
+        and pu_recommend_success.main_recommend_id = #{mainRecommendId,jdbcType=BIGINT}
+      </if>
+      <if test="matchRecommendId != null" >
+        and pu_recommend_success.match_recommend_id = #{matchRecommendId,jdbcType=BIGINT}
+      </if>
+      <if test="mainGroupId != null" >
+        and pu_recommend_success.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+      </if>
+      <if test="matchGroupId != null" >
+        and pu_recommend_success.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+      </if>
+      <if test="type != null" >
+        and pu_recommend_success.type = #{type,jdbcType=BIT}
+      </if>
+      <if test="createTime != null" >
+        and pu_recommend_success.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+    order by pu_recommend_success.id desc
+    limit 1
+  </select>
+  <delete id="deleteRecommendSuccessByMainGroup" parameterType="java.lang.Long">
+    delete from pu_recommend_success where main_group_id = #{mainGroupId}
+  </delete>
+</mapper>

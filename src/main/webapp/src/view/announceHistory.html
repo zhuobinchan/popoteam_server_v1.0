@@ -1,0 +1,61 @@
+<div class="console-sub-title">
+    历史公告
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="form-inline" style="margin-bottom: 20px;">
+    <div class="form-group clearfix">
+        <select class="form-control" ng-model="searchType">
+            <option value="title">标题</option>
+            <option value="content">内容</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="sr-only" for="searchVal">搜索关键字</label>
+        <input type="text" class="form-control" id="searchVal" placeholder="输入关键字"
+               ng-model="searchContent">
+    </div>
+
+    <span style="margin-left: 10px;">发送时间</span>
+
+    <div class="input-group dropdown" style="width: 140px;">
+        <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+            <div class="input-group">
+                <input type="text" class="form-control" data-ng-model="params.sendTimeBegin"
+                       data-date-time-input="YYYY-MM-DD" readonly>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="params.sendTimeBegin"
+                            data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+            </datetimepicker>
+        </ul>
+    </div>
+    <span>-</span>
+
+    <div class="input-group dropdown" style="width: 140px;">
+        <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+            <div class="input-group">
+                <input type="text" class="form-control" data-ng-model="params.sendTimeEnd"
+                       data-date-time-input="YYYY-MM-DD" readonly>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="params.sendTimeEnd"
+                            data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+            </datetimepicker>
+        </ul>
+    </div>
+
+    <button type="button" class="btn btn-default" ng-click="searchParam()">筛选</button>
+    <button type="button" class="btn btn-default" ng-click="reset()">重置</button>
+    <button type="button" class="btn btn-danger pull-right" ng-click="block(true)">解除屏蔽</button>
+    <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="block(false)">屏蔽
+    </button>
+</div>
+
+<div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+<div data-ng-include="'src/tpl/announce-detail.tpl.html'"></div>

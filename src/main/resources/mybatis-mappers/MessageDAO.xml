@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.MessageDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Message">
+        <id column="pu_message_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_message_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_message_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_message_param" property="param" jdbcType="LONGVARCHAR"/>
+        <result column="pu_message_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_message_announcement_id" property="announcementId" jdbcType="BIGINT"/>
+        <result column="pu_message_is_read" property="isRead" jdbcType="TINYINT"/>
+        <result column="pu_message_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_message_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_message.id as pu_message_id,
+        pu_message.user_id as pu_message_user_id,
+        pu_message.content as pu_message_content,
+        pu_message.param as pu_message_param,
+        pu_message.type as pu_message_type,
+        pu_message.announcement_id as pu_message_announcement_id,
+        pu_message.is_read as pu_message_is_read,
+        pu_message.status as pu_message_status,
+        pu_message.create_time as pu_message_create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_message
+        where pu_message.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_message
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_message.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_message.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_message.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="param != null">
+                and pu_message.param = #{param,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_message.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="announcementId != null">
+                and pu_message.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="isRead != null">
+                and pu_message.is_read = #{isRead,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                and pu_message.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_message.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="friendApplyId != null">
+                and pu_message.friend_apply_id = #{friendApplyId,jdbcType=BIGINT}
+            </if>
+        </trim>
+        order by pu_message.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_message
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_message.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_message.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_message.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="param != null">
+                and pu_message.param = #{param,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_message.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="announcementId != null">
+                and pu_message.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="isRead != null">
+                and pu_message.is_read = #{isRead,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                and pu_message.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_message.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_message.id desc
+        limit 1
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO pu_message
+        (user_id,content,param,type,announcement_id)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            ( #{item.userId},#{item.content},#{item.param},#{item.type},#{item.announcementId})
+        </foreach>
+    </insert>
+
+    <select id="countNum" parameterType="com.geetion.puputuan.model.Message" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM pu_message
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_message.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_message.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_message.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="param != null">
+                and pu_message.param = #{param,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_message.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="announcementId != null">
+                and pu_message.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="isRead != null">
+                and pu_message.is_read = #{isRead,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                and pu_message.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_message.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </select>
+
+    <update id="updateByParam" parameterType="com.geetion.puputuan.model.Message">
+        UPDATE pu_message
+        <set>
+            <if test="content != null">
+                pu_message.content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="param != null">
+                pu_message.param = #{param,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="type != null">
+                pu_message.type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isRead != null">
+                pu_message.is_read = #{isRead,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                pu_message.status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                and pu_message.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_message.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="announcementId != null">
+                and pu_message.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+        </where>
+
+
+    </update>
+
+
+    <delete id="delMsgBatch" parameterType="java.util.List">
+        delete from pu_message
+        where id in
+        <foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delMsgByUserId" parameterType="java.lang.Long">
+        DELETE
+        FROM pu_message
+        WHERE pu_message.user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+
+    <select id="selectMsgByDate" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_message
+        <trim prefix="where" prefixOverrides="and|or">
+
+            <if test="begin != null">
+                and pu_message.create_time  &lt; #{begin,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_message.id desc
+    </select>
+
+</mapper>

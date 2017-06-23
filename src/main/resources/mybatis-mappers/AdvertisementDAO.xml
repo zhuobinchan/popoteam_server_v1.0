@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.AdvertisementDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Advertisement">
+        <id column="pu_advertisement_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_advertisement_title" property="title" jdbcType="VARCHAR"/>
+        <result column="pu_advertisement_content" property="content" jdbcType="VARCHAR"/>
+        <result column="pu_advertisement_imageUrl" property="imageUrl" jdbcType="VARCHAR"/>
+        <result column="pu_advertisement_webUrl" property="webUrl" jdbcType="VARCHAR"/>
+        <result column="pu_advertisement_time_interval" property="timeInterval" jdbcType="INTEGER"/>
+        <result column="pu_advertisement_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_advertisement_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_advertisement_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_advertisement_pic_format" property="picFormat" jdbcType="VARCHAR"/>
+        <result column="pu_advertisement_sort_by" property="sortBy" jdbcType="INTEGER"/>
+        <result column="pu_advertisement_bar_id" property="barId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_advertisement.id as pu_advertisement_id,
+        pu_advertisement.title as pu_advertisement_title,
+        pu_advertisement.content as pu_advertisement_content,
+        pu_advertisement.image_url as pu_advertisement_imageUrl,
+        pu_advertisement.web_url as pu_advertisement_webUrl,
+        pu_advertisement.time_interval as pu_advertisement_time_interval,
+        pu_advertisement.type as pu_advertisement_type,
+        pu_advertisement.status as pu_advertisement_status,
+        pu_advertisement.create_time as pu_advertisement_create_time,
+        pu_advertisement.pic_format as pu_advertisement_pic_format,
+        pu_advertisement.sort_by as pu_advertisement_sort_by,
+        pu_advertisement.bar_id as pu_advertisement_bar_id
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_advertisement
+        where pu_advertisement.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_advertisement
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_advertisement.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="title != null">
+                and pu_advertisement.title LIKE concat('%',#{title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="content != null">
+                and pu_advertisement.content LIKE concat('%',#{content,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="imageUrl != null">
+                and pu_advertisement.image_url LIKE concat('%',#{imageUrl,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="webUrl != null">
+                and pu_advertisement.web_url LIKE concat('%',#{webUrl,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="timeInterval != null">
+                and pu_advertisement.time_interval = #{timeInterval,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                and pu_advertisement.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_advertisement.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_advertisement.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        <if test="orderBySort != null">
+            order by pu_advertisement.sort_by ${orderBySort}
+        </if>
+    </select>
+
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_advertisement
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_advertisement.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="title != null">
+                and pu_advertisement.title LIKE concat('%',#{title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="content != null">
+                and pu_advertisement.content LIKE concat('%',#{content,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="imageUrl != null">
+                and pu_advertisement.image_url LIKE concat('%',#{imageUrl,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="webUrl != null">
+                and pu_advertisement.web_url LIKE concat('%',#{webUrl,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="timeInterval != null">
+                and pu_advertisement.time_interval = #{timeInterval,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                and pu_advertisement.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_advertisement.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_advertisement.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        limit 1
+    </select>
+</mapper>

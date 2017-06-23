@@ -1,0 +1,93 @@
+<div class="console-sub-title">
+    app版本号管理
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="form-inline search-con">
+    <div class="form-group">
+        <select class="form-control" ng-model="searchParams.key">
+            <option value="content">app描述</option>
+            <option value="id">app编号</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="输入关键字"
+               ng-model="searchParams.val">
+    </div>
+    <button type="button" class="btn btn-default" ng-click="searchAppVersionsData()">筛选</button>
+    <button type="button" class="btn btn-default" ng-click="resetAppVersionsData()">重置</button>
+</div>
+
+<div class="form-inline clearfix" style="margin-bottom: 10px;">
+    <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#bar-detail">
+        新建
+    </button>
+    <button type="button" class="btn btn-danger pull-right" ng-click="deleteAppVersion()">删除</button>
+</div>
+
+<div ui-grid="appVersionGridOpts" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+
+<div class="modal " id="bar-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="(appVersion.id?'编辑':'新建')+'app版本管理'"></h4>
+            </div>
+            <form class="form-horizontal" ng-submit="saveAppVersion()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="version" class="col-md-2 control-label">app版本号：</label>
+
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="version" placeholder="app版本号" ng-model="appVersion.version"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="identify" class="col-md-2 control-label">标识：</label>
+                        <div class="col-md-10">
+                            <input type="number" class="form-control" id="identify" placeholder="标识" ng-model="appVersion.identify"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="content" class="col-md-2 control-label">版本描述：</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="content" placeholder="标识" ng-model="appVersion.content"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="type" class="col-md-2 control-label">是否可以下载：</label>
+                        <div class="col-md-10">
+                            <select id="type" class="form-control" ng-model="appVersion.type"
+                                    ng-options="l.val as l.txt for l in trueOrFalseOpts">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="url" class="col-md-2 control-label">url地址：</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="url" placeholder="url" ng-model="appVersion.url"
+                                   required>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="form-group">
+                        <label for="apkFile">请选择要上传的apk<font color="red">（**请上传apk）</font></label>
+                        <input id = "apkFile" type="file" ngf-select="" ng-model="apkFile" name="apkFile">
+                    </div>
+                    -->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" ng-bind="appVersion.id?'修改':'新建'"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

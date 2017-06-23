@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.JobUserDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.JobUser">
+        <id column="pu_job_user_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_job_user_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_job_user_job_id" property="jobId" jdbcType="BIGINT"/>
+        <result column="pu_job_user_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="job" column="pu_job_user_job_id"
+                     javaType="com.geetion.puputuan.model.Job"
+                     resultMap="com.geetion.puputuan.dao.JobDAO.BaseResultMap"/>
+
+    </resultMap>
+    <sql id="tableProperty">
+        pu_job_user.id as pu_job_user_id,
+        pu_job_user.user_id as pu_job_user_user_id,
+        pu_job_user.job_id as pu_job_user_job_id,
+        pu_job_user.create_time as pu_job_user_create_time
+    </sql>
+
+    <insert id="insertBatch" parameterType="java.util.Map" useGeneratedKeys="true">
+        INSERT INTO pu_job_user
+        (user_id,job_id)
+        VALUES
+        <foreach collection="jobIds" index="index" item="item" separator=",">
+            ( #{userId},#{item})
+        </foreach>
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_job_user
+        where pu_job_user.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectWithJobByParam" resultMap="com.geetion.puputuan.dao.JobDAO.BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="com.geetion.puputuan.dao.JobDAO.tableProperty"/>
+        from pu_job_user
+        LEFT JOIN pu_job on pu_job.id = pu_job_user.job_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_job_user.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_job_user.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="jobId != null">
+                and pu_job_user.job_id = #{jobId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_job_user.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_job_user.create_time desc
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_job_user
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_job_user.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_job_user.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="jobId != null">
+                and pu_job_user.job_id = #{jobId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_job_user.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_job_user.create_time desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_job_user
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_job_user.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_job_user.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="jobId != null">
+                and pu_job_user.job_id = #{jobId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_job_user.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_job_user.create_time desc
+        limit 1
+    </select>
+
+    <select id="selectJobsByIds" resultType="java.lang.Long">
+        select
+        pu_job_user.job_id
+        from pu_job_user
+        <where>
+            pu_job_user.user_id in
+            <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+        DELETE FROM pu_job_user
+        WHERE pu_job_user.user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

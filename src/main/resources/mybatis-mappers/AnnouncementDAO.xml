@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.AnnouncementDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Announcement">
+        <id column="pu_announcement_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_announcement_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_announcement_title" property="title" jdbcType="VARCHAR"/>
+        <result column="pu_announcement_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_announcement_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_announcement_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_announcement_url" property="url" jdbcType="LONGVARCHAR"/>
+        <result column="pu_announcement_image" property="image" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_announcement.id as pu_announcement_id,
+        pu_announcement.user_id as pu_announcement_user_id,
+        pu_announcement.title as pu_announcement_title,
+        pu_announcement.content as pu_announcement_content,
+        pu_announcement.type as pu_announcement_type,
+        pu_announcement.create_time as pu_announcement_create_time,
+        pu_announcement.url as pu_announcement_url,
+        pu_announcement.image as pu_announcement_image
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_announcement
+        where pu_announcement.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_announcement
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_announcement.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_announcement.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="title != null">
+                and pu_announcement.title LIKE concat('%',#{title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="content != null">
+                and pu_announcement.content LIKE concat('%',#{content,jdbcType=LONGVARCHAR},'%')
+            </if>
+            <if test="type != null">
+                and pu_announcement.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_announcement.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sendTimeBegin != null">
+                and DATE(pu_announcement.create_time) &gt;= DATE(#{sendTimeBegin,jdbcType=TIMESTAMP})
+            </if>
+            <if test="sendTimeEnd != null">
+                and DATE(pu_announcement.create_time) &lt;= DATE(#{sendTimeEnd,jdbcType=TIMESTAMP})
+            </if>
+        </trim>
+        order by pu_announcement.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_announcement
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_announcement.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_announcement.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="title != null">
+                and pu_announcement.title LIKE concat('%',#{title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="content != null">
+                and pu_announcement.content LIKE concat('%',#{content,jdbcType=LONGVARCHAR},'%')
+            </if>
+            <if test="type != null">
+                and pu_announcement.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_announcement.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sendTimeBegin != null">
+                and DATE(pu_announcement.create_time) &gt;= DATE(#{sendTimeBegin,jdbcType=TIMESTAMP})
+            </if>
+            <if test="sendTimeEnd != null">
+                and DATE(pu_announcement.create_time) &lt;= DATE(#{sendTimeEnd,jdbcType=TIMESTAMP})
+            </if>
+        </trim>
+        order by pu_announcement.id desc
+        limit 1
+    </select>
+</mapper>

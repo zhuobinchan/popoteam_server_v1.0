@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>添加好友</title>
+</head>
+<body>
+
+<script type="text/javascript" src="../../dep/jQuery-2.1.4/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../../dep/jquery-qrcode/jquery.qrcode.min.js"></script>
+<style>
+.nick{
+	word-break:normal;
+	width: auto;
+	/*display:block;*/
+	white-space:pre-wrap;
+	word-wrap : break-word ;
+	overflow: hidden ;
+}
+
+body {
+	background-image: url('../../res/img/backgroup.png');
+	/*background: black;*/
+	width: 100%;
+	height: 100%;
+}
+.qrcontain{
+	/*background: white;*/
+	margin-left: 60px;
+	margin-right: 68px;
+	margin-top: 48px;
+
+	-webkit-box-shadow: #666 0px 0px 10px;
+	-moz-box-shadow: #666 0px 0px 10px;
+	box-shadow: #eaeaea 0px 0px 10px;
+	background: #fff;
+}
+
+.wxtip{
+	background: rgba(0,0,0,0.8);
+	text-align: center;
+	position: fixed;
+	left:0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 998;
+	display: none;
+}
+.wxtip-icon{
+	width: 52px;
+	height: 67px;
+	background: url('./../../res/img/weixin-tip.png') no-repeat;
+	display: block;
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+.wxtip-txt{
+	margin-top: 107px;
+	color: #fff;
+	font-size: 16px;
+	line-height: 1.5;
+}
+</style>
+<div id="contain">
+	<div id="head" style="padding-top: 36px; padding-left: 50px;">
+		<div style=" float: left;">
+			<img id="headUrl" style="border-radius:50%; width:120px">
+		</div>
+		<div style="padding-left: 145px; padding-top: 17px">
+
+			<span id="nickName" class="nick" style="font-size:36px; color: #333333"></span>
+			<img id="sex" style="padding-left: 5px">
+			<br>
+			<span id="identify" style="font-size:28px; color: #999999; margin-top: 17px"></span>
+		</div>
+	
+	</div>
+	<div class="qrcontain" >
+		<div id="qrcodeTable" style="padding-top: 100px">
+		<img id="qrCodeIco" style="position: absolute; border-radius:20%;border: 5px #ffffff solid;" />
+		</div>
+		<hr style="height:1px;border:none;border-top:1px solid #f0f0f0; margin-top: 100px" />
+		<div>
+		<p style="text-align:center; padding-top: 30px; padding-bottom: 34px"><img src="../../res/img/logo.png" class="img-responsive center-block"/></p>
+		<span style="font-size: 40px; color: #333333; text-align:center; display:block;">截取屏幕，下载或打开蒲蒲团</span>
+		<span style="font-size: 40px; color: #333333; text-align:center; display:block;">识别二维码加我为好友</span>
+		<span style="font-size: 40px; color: #333333; text-align:center; display:block;">一起来组局吧</span>
+		<p style="text-align:center; padding-top: 30px; padding-bottom: 34px">
+			<a href="javascript:void(0)" id="ios_download"><img src="../../res/img/btn_ios.png" class="img-responsive center-block"/></a>
+			<a href="javascript:void(0)" id="android_download"><img src="../../res/img/btn_android.png" class="img-responsive center-block" style="padding-left: 50px"/></a>
+		</p>
+		</div>
+	</div>
+	<!-- 微信内置浏览下载提示-->
+	<div class="wxtip" id="weixintip" style="display:none;">
+		<span class="wxtip-icon"></span>
+		<p class="wxtip-txt">点击右上角<br/>选择在浏览器中打开，进行下载</p>
+	</div>
+	<!--<div style="background: white; ">-->
+		<!--<div id="qrcodeTable" style="padding-top: 113px">-->
+			<!--&lt;!&ndash;<img id="qrCodeIco" style="position: absolute;width: 60px; height: 60px;" />&ndash;&gt;-->
+		<!--</div>-->
+		<!--<hr style="height:1px;border:none;border-top:1px solid #f0f0f0; margin-top: 100px" />-->
+		<!--<div style="">-->
+			<!--<p style="text-align:center; padding-top: 30px; padding-bottom: 34px"><img src="../../res/img/logo.png" class="img-responsive center-block"/></p>-->
+			<!--<span style="font-size: 40px; color: #333333; text-align:center; display:block;">截取屏幕，下载或打开蒲蒲团</span>-->
+			<!--<span style="font-size: 40px; color: #333333; text-align:center; display:block;">识别二维码加我为好友</span>-->
+			<!--<span style="font-size: 40px; color: #333333; text-align:center; display:block;">一起来组局吧</span>-->
+			<!--<p style="text-align:center; padding-top: 30px; padding-bottom: 34px">-->
+			<!--<img src="../../res/img/btn_ios.png" class="img-responsive center-block"/>-->
+			<!--<img src="../../res/img/btn_android.png" class="img-responsive center-block" style="padding-left: 50px"/>-->
+			<!--</p>-->
+		<!--</div>-->
+	<!--</div>-->
+</div>
+
+<script>
+	function getValue(name){
+		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if(r!=null)
+			return r[2];
+	}
+	function getWidth(){
+		// 屏幕宽度
+		var width = document.body.offsetWidth;
+		return width;
+	}
+
+
+	$(document).ready(function(){
+
+
+		var browser={
+			versions:function(){
+				var u = navigator.userAgent, app = navigator.appVersion;
+				return {
+					trident: u.indexOf('Trident') > -1, //IE内核
+					presto: u.indexOf('Presto') > -1, //opera内核
+					webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+					gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+					mobile: !!u.match(/AppleWebKit.*Mobile.*/)||!!u.match(/AppleWebKit/), //是否为移动终端
+					ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+					android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+					iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者QQHD浏览器
+					iPad: u.indexOf('iPad') > -1, //是否iPad
+					symbian: u.indexOf('Symbian') > -1, //是否Symbian
+					webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+				};
+			}()
+		}
+
+		// 判断是否是微信
+		var is_weixin = (function() {
+			var ua = navigator.userAgent.toLowerCase();
+			if (ua.match(/MicroMessenger/i) == "micromessenger") {
+				return true;
+			} else {
+				return false;
+			}
+		})();
+
+		// 弹出微信提示窗口
+		function showFilter(){
+			if(is_weixin) {
+				$('#weixintip').show();
+			}
+		}
+
+		$('#ios_download').on('click', function(){
+			showFilter();
+			window.location.href = 'https://itunes.apple.com/cn/app/pu-pu-tuan/id1180484475?mt=8';
+		})
+
+		$('#android_download').on('click', function(){
+			showFilter();
+			if(is_weixin) {
+				$('#weixintip').show();
+			}else {
+				window.location.href = 'http://www.popoteam.com';
+			}
+
+		})
+
+
+		var host = location.protocol + '//' + window.location.host;
+		var url = host + '/' + '/app/user/search'
+
+		// 屏幕宽度
+		var width = getWidth();
+		// 二维码宽度
+		var qrWidth = width * 3 / 5;
+
+		var id = getValue("identify");
+		var head = getValue("head");
+		var nickName = decodeURI(getValue("nickName"));
+		var sex = getValue("sex");
+
+		$("#contain").width(width);
+		$("#headUrl").attr("src", head);
+		$("#qrCodeIco").attr("src", head);
+		$("#qrCodeIco").attr("width", qrWidth / 5);
+		$("#qrCodeIco").attr("height", qrWidth / 5);
+		var margin = (qrWidth - $("#qrCodeIco").height()) / 2; //控制Logo图标的位置
+		$("#qrCodeIco").css("margin", margin);
+
+		$("#nickName").text(nickName);
+		$("#sex").attr("src", "../../res/img/"+ sex + "_icon@2x.png")
+		$("#identify").text("ID:" + id);
+
+		$("#qrcodeTable").css("marginLeft", width * 1 / 6);
+
+		jQuery('#qrcodeTable').qrcode({
+			render : "canvas",
+			width : qrWidth,
+			height : qrWidth,
+			text : "PPT_ID:" + id
+		});
+
+	})
+
+	$('#weixintip').click(function(){
+		$('#weixintip').hide();
+	});
+
+
+</script>
+
+</body>
+</html>

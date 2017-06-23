@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.FriendRelationshipDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.FriendRelationship">
+        <id column="pu_friend_relationship_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_friend_relationship_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_friend_relationship_friend_id" property="friendId" jdbcType="BIGINT"/>
+        <result column="pu_friend_relationship_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_friend_relationship_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_friend_relationship.id as pu_friend_relationship_id,
+        pu_friend_relationship.user_id as pu_friend_relationship_user_id,
+        pu_friend_relationship.friend_id as pu_friend_relationship_friend_id,
+        pu_friend_relationship.type as pu_friend_relationship_type,
+        pu_friend_relationship.create_time as pu_friend_relationship_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_friend_relationship
+        where pu_friend_relationship.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_friend_relationship
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_friend_relationship.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_friend_relationship.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="friendId != null">
+                and pu_friend_relationship.friend_id = #{friendId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_friend_relationship.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_friend_relationship.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_friend_relationship.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_friend_relationship
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_friend_relationship.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_friend_relationship.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="friendId != null">
+                and pu_friend_relationship.friend_id = #{friendId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_friend_relationship.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_friend_relationship.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_friend_relationship.id desc
+        limit 1
+    </select>
+
+
+    <select id="selectParamWithUser" parameterType="java.util.Map"
+            resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap">
+        select
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>
+        <!--include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.JobDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.InterestDAO.tableProperty"/-->
+        from pu_friend_relationship
+        LEFT JOIN pu_user ON pu_user.user_id = pu_friend_relationship.friend_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        <!--LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        LEFT JOIN pu_job_user ON pu_job_user.user_id = pu_user.user_id
+        LEFT JOIN pu_job on pu_job.id = pu_job_user.job_id
+        LEFT JOIN pu_interest_user ON pu_interest_user.user_id = pu_user.user_id
+        LEFT JOIN pu_interest on pu_interest.id = pu_interest_user.interest_id-->
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_friend_relationship.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_friend_relationship.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="friendId != null">
+                and pu_friend_relationship.friend_id = #{friendId,jdbcType=BIGINT}
+            </if>
+
+            <if test="nickName != null">
+                and pu_user.nick_name like concat('%',#{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="identify != null">
+                and pu_user.identify like concat('%', #{identify,jdbcType=BIGINT},'%')
+            </if>
+            <if test="sex != null">
+                and pu_user.sex = #{sex,jdbcType=VARCHAR}
+            </if>
+            <if test="notInStatus != null and notInMemberStatus != null ">
+                AND pu_friend_relationship.friend_id NOT IN
+                (
+                SELECT pu_user.user_id
+                FROM pu_group
+                LEFT JOIN pu_group_member ON pu_group_member.group_id = pu_group.id
+                LEFT JOIN pu_user ON pu_user.user_id = pu_group_member.user_id
+                <trim prefix="WHERE" prefixOverrides="and|or">
+                    <if test="groupId != null">
+                        AND pu_group.id = #{groupId,jdbcType=BIGINT}
+                    </if>
+                    <if test="notInStatus != null">
+                        AND pu_group.status IN (
+                        <foreach collection="notInStatus" item="item" index="index" separator=",">
+                            #{item}
+                        </foreach>
+                        )
+                    </if>
+                    <if test="notInMemberStatus != null">
+                        AND pu_group_member.status IN (
+                        <foreach collection="notInMemberStatus" item="item" index="index" separator=",">
+                            #{item}
+                        </foreach>
+                        )
+                    </if>
+                </trim>
+                )
+            </if>
+        </trim>
+        order by pu_friend_relationship.create_time desc
+    </select>
+
+
+    <select id="selectParamWithUserOrderByFirstPinyin" parameterType="java.util.Map"
+            resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap" statementType="CALLABLE">
+        select
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>
+        <!--include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.JobDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.InterestDAO.tableProperty"/-->
+        from pu_friend_relationship
+        LEFT JOIN pu_user ON pu_user.user_id = pu_friend_relationship.friend_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        <!--LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        LEFT JOIN pu_job_user ON pu_job_user.user_id = pu_user.user_id
+        LEFT JOIN pu_job on pu_job.id = pu_job_user.job_id
+        LEFT JOIN pu_interest_user ON pu_interest_user.user_id = pu_user.user_id
+        LEFT JOIN pu_interest on pu_interest.id = pu_interest_user.interest_id-->
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_friend_relationship.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_friend_relationship.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="friendId != null">
+                and pu_friend_relationship.friend_id = #{friendId,jdbcType=BIGINT}
+            </if>
+
+            <if test="nickName != null">
+                and pu_user.nick_name like concat('%',#{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="identify != null">
+                and pu_user.identify like concat('%', #{identify,jdbcType=BIGINT},'%')
+            </if>
+            <if test="sex != null">
+                and pu_user.sex = #{sex,jdbcType=VARCHAR}
+            </if>
+            <if test="notInStatus != null and notInMemberStatus != null ">
+                AND pu_friend_relationship.friend_id NOT IN
+                (
+                  SELECT user_id FROM pu_group_member WHERE group_id in (
+                SELECT id FROM pu_group WHERE pu_group.status IN (
+                  <foreach collection="notInStatus" item="item" index="index" separator=",">
+                  #{item}
+                  </foreach>)
+                )
+                and pu_group_member.status IN (
+                  <foreach collection="notInMemberStatus" item="item" index="index" separator=",">
+                  #{item}
+                  </foreach>
+                )
+                )
+            </if>
+        </trim>
+        order by orderByFirstPinyin(pu_user.nick_name)
+    </select>
+
+    <select id="selectFriendId" resultType="java.lang.Long">
+        select DISTINCT
+        pu_friend_relationship.friend_id as pu_friend_relationship_friend_id
+        from pu_friend_relationship
+        <where>
+            pu_friend_relationship.user_id in
+            <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+        order by pu_friend_relationship.id desc
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.Map" useGeneratedKeys="true">
+        INSERT INTO pu_friend_relationship
+        (user_id,friend_id)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            ( #{item.userId},#{item.friendId})
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteBetween" parameterType="java.util.Map">
+        DELETE FROM pu_friend_relationship
+        WHERE
+        (user_id = #{userId} and friend_id = #{friendId})
+        OR
+        (user_id = #{friendId} and friend_id = #{userId})
+    </delete>
+
+
+    <select id="selectFriendDetail" parameterType="java.util.Map"
+            resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMapWithCount">
+        SELECT
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <!--include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/,-->
+        <!-- 好友数 -->
+        ifnull(friends_number.times, 0) AS pu_user_friends_number,
+        <!-- 相册数 -->
+        ifnull(photo_number.times, 0) AS pu_user_photo_number
+        FROM pu_user
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        <!--LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id-->
+        LEFT JOIN pu_friend_relationship ON pu_friend_relationship.friend_id = pu_user.user_id
+        <!-- 好友数 -->
+        LEFT JOIN (SELECT count(*) AS times, pu_friend_relationship.user_id
+        FROM pu_friend_relationship GROUP BY pu_friend_relationship.user_id
+        ) AS friends_number ON friends_number.user_id = pu_user.user_id
+        <!-- 相册数 -->
+        LEFT JOIN (SELECT count(*) AS times,pu_photo.user_id FROM pu_photo
+        GROUP BY pu_photo.user_id
+        ) AS photo_number ON photo_number.user_id = pu_user.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_friend_relationship.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_friend_relationship.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="friendId != null">
+                and pu_friend_relationship.friend_id = #{friendId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_friend_relationship.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_friend_relationship.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </select>
+
+
+</mapper>

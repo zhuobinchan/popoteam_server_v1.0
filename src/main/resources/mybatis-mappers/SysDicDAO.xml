@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.SysDicDAO" >
+  <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.SysDic" >
+    <id column="geetion_sys_dic_id" property="id" jdbcType="BIGINT" />
+    <result column="geetion_sys_dic_key" property="key" jdbcType="VARCHAR" />
+    <result column="geetion_sys_dic_value" property="value" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="tableProperty" >
+    geetion_sys_dic.id as geetion_sys_dic_id,
+    geetion_sys_dic.key as geetion_sys_dic_key,
+    geetion_sys_dic.value as geetion_sys_dic_value
+  </sql>
+  <select id="selectByKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="tableProperty" />
+    from geetion_sys_dic
+    where geetion_sys_dic.key = #{key,jdbcType=VARCHAR}
+    limit 1
+  </select>
+
+</mapper>

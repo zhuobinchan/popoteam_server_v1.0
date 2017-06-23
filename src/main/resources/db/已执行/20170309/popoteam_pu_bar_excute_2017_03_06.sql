@@ -1,0 +1,1 @@
+ALTER TABLE popoteam.pu_bar ADD action_type int DEFAULT 0 NULL;

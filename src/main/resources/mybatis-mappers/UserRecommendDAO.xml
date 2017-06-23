@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UserRecommendDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.UserRecommend">
+        <id column="pu_user_recommend_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_user_recommend_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_user_recommend_recommend_id" property="recommendId" jdbcType="BIGINT"/>
+        <result column="pu_user_recommend_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_user_recommend_createTime" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="recommend" column="pu_user_recommend_recommend_id"
+                     javaType="com.geetion.puputuan.model.Recommend"
+                     resultMap="com.geetion.puputuan.dao.RecommendDAO.BaseResultMap"/>
+
+    </resultMap>
+
+
+    <sql id="tableProperty">
+        pu_user_recommend.id as pu_user_recommend_id,
+        pu_user_recommend.user_id as pu_user_recommend_user_id,
+        pu_user_recommend.recommend_id as pu_user_recommend_recommend_id,
+        pu_user_recommend.status as pu_user_recommend_status,
+        pu_user_recommend.create_time as pu_user_recommend_createTime
+
+    </sql>
+
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_user_recommend
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_user_recommend.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_user_recommend.user_id = #{name,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_user_recommend.recommend_id = #{token,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_user_recommend.status = #{locationId,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by pu_user_recommend.create_time ASC
+        limit 1
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_user_recommend
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_user_recommend.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_user_recommend.user_id = #{name,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_user_recommend.recommend_id = #{token,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_user_recommend.status = #{locationId,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by pu_user_recommend.create_time ASC
+    </select>
+
+    <delete id="deleteUserRecommendBatch" parameterType="java.util.List">
+        delete from pu_user_recommend where recommend_id in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteUserRecommendByGroupId" parameterType="java.util.Map">
+        DELETE FROM pu_user_recommend
+          WHERE recommend_id in (
+            SELECT pu_recommend.id FROM pu_recommend WHERE pu_recommend.main_group_id = #{groupId,jdbcType=BIGINT}
+          )
+    </delete>
+
+    <!--<select id="deleteUserRecommendByGroupId" parameterType="java.util.Map"-->
+            <!--statementType="CALLABLE" >-->
+        <!--{call-->
+        <!--pr_update_recommend(-->
+        <!--#{groupId,mode=IN,jdbcType=BIGINT}-->
+        <!--)}-->
+    <!--</select>-->
+
+
+    <select id="selectUserRecommendByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.RecommendDAO.tableProperty"/>
+        from pu_user_recommend
+        LEFT JOIN pu_recommend on pu_user_recommend.recommend_id = pu_recommend.id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_user_recommend.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_user_recommend.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_user_recommend.recommend_id = #{recommendId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_user_recommend.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="excludeUrId != null">
+                and pu_user_recommend.id  &gt; #{excludeUrId,jdbcType=INTEGER}
+            </if>
+            <if test="currentGroupId != null">
+                and pu_user_recommend.recommend_id in (
+                  SELECT pu_recommend.id FROM pu_recommend
+                    LEFT JOIN pu_group
+                    ON pu_recommend.main_group_id = pu_group.id
+                  WHERE pu_group.id = #{currentGroupId,jdbcType=INTEGER}
+                )
+            </if>
+        </trim>
+        order by pu_user_recommend.id ASC
+    </select>
+
+    <update id="update" parameterType="java.util.Map">
+        UPDATE pu_user_recommend
+        <set>
+            <if test="userId != null">
+                 pu_user_recommend.user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="recommendId != null">
+                 pu_user_recommend.recommend_id = #{recommendId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                 pu_user_recommend.status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE pu_user_recommend.id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch"  parameterType="java.util.List">
+
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE pu_user_recommend
+            <set>
+                pu_user_recommend.status = #{item.status,jdbcType=INTEGER}
+            </set>
+            WHERE pu_user_recommend.id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+
+    </update>
+
+</mapper>

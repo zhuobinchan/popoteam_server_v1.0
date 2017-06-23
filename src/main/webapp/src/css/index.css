@@ -1,0 +1,275 @@
+.unselectable, .province-list-con {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none; }
+
+.province-list-con .make-sure-con > i {
+  margin-left: 5px;
+  cursor: pointer; }
+.province-list-con .province-item {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  background-color: #d3d3d3;
+  line-height: 28px;
+  color: #333333; }
+  .province-list-con .province-item:active, .province-list-con .province-item.active {
+    color: #fff;
+    background-color: #5bc0de; }
+    .province-list-con .province-item:active:hover, .province-list-con .province-item:active.hover, .province-list-con .province-item.active:hover, .province-list-con .province-item.active.hover {
+      cursor: default;
+      color: #fff;
+      background-color: #5bc0de; }
+  .province-list-con .province-item:hover, .province-list-con .province-item.hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #2390b0; }
+
+.city-list-con {
+  position: relative;
+  height: auto;
+  min-height: 150px;
+  margin-top: 20px;
+  background-color: #f0f0f0;
+  padding: 5px;
+  border: 1px solid #d3d3d3; }
+  .city-list-con .select-all-label {
+    display: block; }
+  .city-list-con .city-checkbox-item {
+    margin-right: 10px;
+    font-weight: normal; }
+    .city-list-con .city-checkbox-item > input[type=checkbox] {
+      margin-right: 5px; }
+  .city-list-con .btn-selected-cities {
+    position: absolute;
+    right: 5px;
+    bottom: 5px; }
+
+.selected-list-con {
+  margin-top: 20px;
+  border-top: 1px dashed #f0f0f0; }
+  .selected-list-con .selected-wrap {
+    padding: 5px; }
+    .selected-list-con .selected-wrap .selected-province-con {
+      border-radius: 4px;
+      background-color: #d9edf7;
+      padding: 10px; }
+      .selected-list-con .selected-wrap .selected-province-con .selected-province-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 0; }
+        .selected-list-con .selected-wrap .selected-province-con .selected-province-title > i {
+          float: right;
+          cursor: pointer;
+          color: #c9302c; }
+      .selected-list-con .selected-wrap .selected-province-con .selected-city-item {
+        margin-right: 8px;
+        line-height: 28px; }
+        .selected-list-con .selected-wrap .selected-province-con .selected-city-item > i {
+          cursor: pointer;
+          color: #ababab; }
+
+.ml10 {
+  margin-left: 10px; }
+
+.lh40 {
+  line-height: 40px; }
+
+.cp {
+  cursor: pointer; }
+
+.m10 {
+  margin: 10px; }
+
+.mtb10 {
+  margin: 10px 0; }
+
+.mlr10 {
+  margin: 0 10px; }
+
+.mb5 {
+  margin-bottom: 5px; }
+
+.mb10 {
+  margin-bottom: 10px; }
+
+.dib {
+  display: inline-block; }
+
+.minw105 {
+  min-width: 105px; }
+
+.w60I {
+  width: 60px !important; }
+
+.p4 {
+  padding: 4px; }
+
+.b#ccc {
+  border: 1px solid #cccccc; }
+
+/*console-header.tpl.html style start*/
+.console-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 5;
+  height: 100px;
+  line-height: 100px;
+  background-color: #ffe544;
+  padding: 0 30px;
+  color: #fff; }
+  .console-header .img-header-logo {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 15px; }
+  .console-header .header-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 15px; }
+  .console-header .header-user-info {
+    float: right;
+    width: 255px; }
+    .console-header .header-user-info > a {
+      color: #fff; }
+
+.header-gap-bar {
+  position: fixed;
+  top: 100px;
+  z-index: 5;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  background-color: #e7e7e7;
+  padding: 0 15px; }
+
+/*console-header.tpl.html style end*/
+/*console-nav.tpl.html style start*/
+.console-nav-con {
+  position: fixed;
+  top: 130px;
+  bottom: 0;
+  width: 190px;
+  overflow: hidden;
+  z-index: 99;
+  float: left; }
+  .console-nav-con .console-nav {
+    width: 207px;
+    height: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: #747781;
+    padding-bottom: 10px; }
+    .console-nav-con .console-nav .nav-group .has-href, .console-nav-con .console-nav .nav-group .nav-group-item {
+      cursor: pointer; }
+      .console-nav-con .console-nav .nav-group .has-href.active, .console-nav-con .console-nav .nav-group .active.nav-group-item {
+        color: #343948;
+        background-color: #c7c9cd; }
+    .console-nav-con .console-nav .nav-group .nav-group-name {
+      display: block;
+      text-indent: 10px;
+      height: 45px;
+      line-height: 45px;
+      color: #d7d8dd;
+      font-size: 18px; }
+      .console-nav-con .console-nav .nav-group .nav-group-name.active {
+        color: #343948;
+        background-color: #c7c9cd; }
+      .console-nav-con .console-nav .nav-group .nav-group-name > i {
+        width: 30px;
+        text-align: right;
+        vertical-align: middle;
+        margin-right: 5px; }
+    .console-nav-con .console-nav .nav-group .nav-group-item {
+      line-height: 35px;
+      text-indent: 50px;
+      color: #e7e7e7; }
+
+/*console-nav.tpl.html style end*/
+.console-ng-view {
+  position: absolute;
+  height: auto;
+  top: 150px;
+  left: 207px;
+  right: 20px; }
+
+.console-sub-title {
+  height: 49px;
+  line-height: 29px;
+  font-size: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e7e7e7; }
+
+.search-con {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 10px; }
+
+.complain-photo-con {
+  border: 1px solid #ccc;
+  display: inline-block;
+  width: 200px;
+  height: 200px; }
+
+.complain-info-con {
+  display: inline-block;
+  max-width: 340px;
+  vertical-align: top;
+  margin-left: 20px; }
+  .complain-info-con .photo-owner-info-con {
+    margin-top: 60px; }
+    .complain-info-con .photo-owner-info-con > span {
+      margin: 0 10px; }
+  .complain-info-con .photo-info-con {
+    margin-top: 10px; }
+    .complain-info-con .photo-info-con .fa-heart {
+      color: #FE3B35;
+      margin-right: 10px; }
+    .complain-info-con .photo-info-con .photo-create-time {
+      color: #d3d3d3; }
+
+.complain-list-con {
+  margin-top: 30px;
+  border: 1px solid #ccc; }
+  .complain-list-con .complain-item-con {
+    height: 40px;
+    line-height: 40px;
+    margin: 5px; }
+    .complain-list-con .complain-item-con > img {
+      width: 40px; }
+    .complain-list-con .complain-item-con .complain-item-user-name {
+      color: #d3d3d3; }
+    .complain-list-con .complain-item-con .complain-item-time {
+      color: #d3d3d3;
+      float: right; }
+
+.user-detail-label {
+  width: 180px;
+  line-height: 30px;
+  display: inline-block;
+  float: left; }
+
+.album {
+  margin-right: 10px;
+  float: left;
+  width: 200px;
+  height: 250px;
+  border: 1px solid #e8e8e8; }
+  .album .photo {
+    height: 180px;
+    text-align: center;
+    border-bottom: 1px solid #e8e8e8; }
+    .album .photo img {
+      height: 180px;
+      max-width: 100%; }
+  .album .detail {
+    padding: 5px 15px; }
+    .album .detail .date {
+      font-size: 14px;
+      color: #adadad; }
+
+/*# sourceMappingURL=index.css.map */

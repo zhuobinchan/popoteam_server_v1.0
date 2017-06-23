@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.AppSettingDAO" >
+  <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.AppSetting" >
+    <id column="pu_app_setting_id" property="id" jdbcType="BIGINT" />
+    <result column="pu_app_setting_advertisement_pages" property="advertisementPages" jdbcType="INTEGER" />
+    <result column="pu_app_setting_carousel_interval" property="carouselInterval" jdbcType="REAL" />
+    <result column="pu_app_setting_activity_position_interval" property="activityPositionInterval" jdbcType="INTEGER" />
+    <result column="pu_app_setting_activity_new_interval" property="activityNewInterval" jdbcType="INTEGER" />
+    <result column="pu_app_setting_activity_position_radius" property="activityPositionRadius" jdbcType="INTEGER" />
+    <result column="pu_app_setting_create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="tableProperty" >
+    pu_app_setting.id as pu_app_setting_id, pu_app_setting.advertisement_pages as pu_app_setting_advertisement_pages, 
+    pu_app_setting.carousel_interval as pu_app_setting_carousel_interval, pu_app_setting.activity_position_interval as pu_app_setting_activity_position_interval, 
+    pu_app_setting.activity_new_interval as pu_app_setting_activity_new_interval, pu_app_setting.activity_position_radius as pu_app_setting_activity_position_radius, 
+    pu_app_setting.create_time as pu_app_setting_create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tableProperty" />
+    from pu_app_setting
+    where pu_app_setting.id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+    <include refid="tableProperty" />
+    from pu_app_setting
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="id != null" >
+        and pu_app_setting.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="advertisementPages != null" >
+        and pu_app_setting.advertisement_pages = #{advertisementPages,jdbcType=INTEGER}
+      </if>
+      <if test="carouselInterval != null" >
+        and pu_app_setting.carousel_interval = #{carouselInterval,jdbcType=REAL}
+      </if>
+      <if test="activityPositionInterval != null" >
+        and pu_app_setting.activity_position_interval = #{activityPositionInterval,jdbcType=INTEGER}
+      </if>
+      <if test="activityNewInterval != null" >
+        and pu_app_setting.activity_new_interval = #{activityNewInterval,jdbcType=INTEGER}
+      </if>
+      <if test="activityPositionRadius != null" >
+        and pu_app_setting.activity_position_radius = #{activityPositionRadius,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and pu_app_setting.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+    order by pu_app_setting.id desc
+  </select>
+  <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+    <include refid="tableProperty" />
+    from pu_app_setting
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="id != null" >
+        and pu_app_setting.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="advertisementPages != null" >
+        and pu_app_setting.advertisement_pages = #{advertisementPages,jdbcType=INTEGER}
+      </if>
+      <if test="carouselInterval != null" >
+        and pu_app_setting.carousel_interval = #{carouselInterval,jdbcType=REAL}
+      </if>
+      <if test="activityPositionInterval != null" >
+        and pu_app_setting.activity_position_interval = #{activityPositionInterval,jdbcType=INTEGER}
+      </if>
+      <if test="activityNewInterval != null" >
+        and pu_app_setting.activity_new_interval = #{activityNewInterval,jdbcType=INTEGER}
+      </if>
+      <if test="activityPositionRadius != null" >
+        and pu_app_setting.activity_position_radius = #{activityPositionRadius,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and pu_app_setting.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+    order by pu_app_setting.id desc
+    limit 1
+  </select>
+</mapper>

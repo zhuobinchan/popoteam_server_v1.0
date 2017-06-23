@@ -1,0 +1,170 @@
+@charset "utf-8";
+
+/*console-header.tpl.html style start*/
+.console-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 5;
+  height: $console-header-height;
+  line-height: $console-header-height;
+  background-color: #ffe544;
+  padding: 0 30px;
+  color: #fff;
+  .img-header-logo {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 15px;
+  }
+  .header-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 15px;
+  }
+  .header-user-info {
+    float: right;
+    width: 255px;
+    > a {
+      color: #fff;
+    }
+  }
+}
+
+.header-gap-bar {
+  position: fixed;
+  top: $console-header-height;
+  z-index: 5;
+  width: 100%;
+  height: $header-gap-bar-height;
+  line-height: $header-gap-bar-height;
+  background-color: $bg-dark-white;
+  padding: 0 15px;
+}
+
+/*console-header.tpl.html style end*/
+
+/*console-nav.tpl.html style start*/
+.console-nav-con {
+  position: fixed;
+  top: $console-header-height + $header-gap-bar-height;
+  bottom: 0;
+  width: 190px;
+  overflow: hidden;
+  z-index: 99;
+  float: left;
+  .console-nav {
+    width: $console-nav-width;
+    height: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: $bg-dark-grey;
+    padding-bottom: 10px;
+    .nav-group {
+      .has-href {
+        cursor: pointer;
+        &.active {
+          color: $bg-dark-blue;
+          background-color: $bg-light-grey;
+        }
+      }
+      .nav-group-name {
+        display: block;
+        text-indent: 10px;
+        height: $console-group-name-height;
+        line-height: $console-group-name-height;
+        color: $text-light-grey;
+        font-size: 18px;
+        &.active {
+          color: $bg-dark-blue;
+          background-color: $bg-light-grey;
+        }
+        > i {
+          width: 30px;
+          text-align: right;
+          vertical-align: middle;
+          margin-right: 5px;
+        }
+      }
+      .nav-group-item {
+        @extend .has-href;
+        line-height: $console-group-item-height;
+        text-indent: 50px;
+        color: $bg-dark-white;
+      }
+    }
+  }
+}
+
+/*console-nav.tpl.html style end*/
+
+.console-ng-view {
+  position: absolute;
+  height: auto;
+  top: $console-header-height + $header-gap-bar-height+20px;
+  left: $console-nav-width;
+  right: 20px;
+}
+
+.console-sub-title {
+  height: 49px;
+
+  line-height: 29px;
+  font-size: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.search-con{
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.complain-photo-con{
+  border: 1px solid #ccc;
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+}
+.complain-info-con{
+  display: inline-block;
+  max-width: 340px;
+  vertical-align: top;
+  margin-left: 20px;
+  .photo-owner-info-con{
+    margin-top: 60px;
+    >span{
+      margin: 0 10px;
+    }
+  }
+  .photo-info-con{
+    margin-top: 10px;
+    .fa-heart{
+      color: #FE3B35;
+      margin-right: 10px;
+    }
+    .photo-create-time{
+      color: #d3d3d3;
+    }
+  }
+}
+.complain-list-con{
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  .complain-item-con{
+    height: 40px;
+    line-height: 40px;
+    margin: 5px;
+    >img{
+      width: 40px;
+    }
+    .complain-item-user-name{
+      color: #d3d3d3;
+    }
+    .complain-item-time{
+      color: #d3d3d3;
+      float: right;
+    }
+  }
+}

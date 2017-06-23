@@ -1,0 +1,54 @@
+<div class="console-sub-title">
+    管理员登录历史列表
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="form-inline search-con">
+
+    <select class="form-control" ng-model="searchType">        <option value="userId">ID</option>
+        <option value="nickName">昵称</option>
+    </select>
+
+    <input type="text" class="form-control" placeholder="输入关键字" style="max-width:140px;"
+           ng-model="searchContent">
+
+    <span style="margin-left: 10px;">登录时间</span>
+
+    <div class="input-group dropdown" style="width: 140px;">
+        <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+            <div class="input-group">
+                <input type="text" class="form-control" data-ng-model="params.loginTimeBegin"
+                       data-date-time-input="YYYY-MM-DD" readonly>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="params.loginTimeBegin"
+                            data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+            </datetimepicker>
+        </ul>
+    </div>
+    <span>-</span>
+
+    <div class="input-group dropdown" style="width: 140px;">
+        <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+            <div class="input-group">
+                <input type="text" class="form-control" data-ng-model="params.loginTimeEnd"
+                       data-date-time-input="YYYY-MM-DD" readonly>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="params.loginTimeEnd"
+                            data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+            </datetimepicker>
+        </ul>
+    </div>
+
+    <button type="button" class="btn btn-default" ng-click="searchParam()">筛选</button>
+    <button type="button" class="btn btn-default" ng-click="reset()">重置</button>
+
+</div>
+
+
+<div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>

@@ -1,0 +1,11 @@
+{
+  "EndPoint": "oss-cn-shenzhen.aliyuncs.com",
+  "ImageEndPoint": "oss-cn-shenzhen.aliyuncs.com",
+  "MainAccessKeyId": "F3jtWvuDIyOhiHrG",
+  "MainAccessKeySecret": "Eu9zTWErCs0AzFc4qvqIYI29QcqJGY",
+  "BucketName": "bucket-puputuan",
+  "BuckDomain": "puputuan/",
+  "FolderUser": "user/",
+  "FolderProject": "project/",
+  "FolderTest": "test/"
+}

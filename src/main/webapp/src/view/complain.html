@@ -1,0 +1,135 @@
+<div class="console-sub-title">
+    投诉列表
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="form-inline search-con" style="padding: 0;">
+    <div class="dib m10">
+        <div class="form-group">
+            <select class="form-control" ng-model="searchParams.key">
+                <option value="nickName">昵称</option>
+                <option value="id">ID</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="输入关键字"
+                   ng-model="searchParams.val">
+        </div>
+    </div>
+
+    <div class="dib m10">
+        <select class="form-control"
+                ng-model="searchParams.provinceId"
+                ng-options="province.code as province.name for province in provinceList"
+                ng-change="getDistrict(2,searchParams.provinceId)">
+            <option value="">省份</option>
+        </select>
+        <select class="form-control info-input-select"
+                ng-model="searchParams.cityId"
+                ng-options="city.code as city.name for city in cityList ">
+            <option value="">城市</option>
+        </select>
+    </div>
+
+    <div class="dib mtb10">
+        <label>举报次数:</label>
+        <input type="number" class="form-control w60I p4" ng-model="searchParams.complainTimesBegin"/>~
+        <input type="number" class="form-control w60I p4" ng-model="searchParams.complainTimesEnd"/>
+    </div>
+
+    <div class="dib m10">
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="formDate">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="searchParams.releaseTimeBegin"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <datetimepicker data-ng-model="searchParams.releaseTimeBegin"
+                                data-datetimepicker-config="{ dropdownSelector: '#formDate', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+        <span>-</span>
+
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="toDate">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="searchParams.releaseTimeEnd"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <datetimepicker data-ng-model="searchParams.releaseTimeEnd"
+                                data-datetimepicker-config="{ dropdownSelector: '#toDate', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+    </div>
+    <div class="dib m10">
+        <label>性别:</label>
+        <label class="radio-inline">
+            <input type="radio" name="typeRadios" id="inlineRadio1" value ng-model="searchParams.sex"> 全部
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="typeRadios" id="inlineRadio2" value="M" ng-model="searchParams.sex"> 男
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="typeRadios" id="inlineRadio3" value="F" ng-model="searchParams.sex"> 女
+        </label>
+    </div>
+    <button type="button" class="btn btn-default" ng-click="searchComplains()">筛选</button>
+    <button type="button" class="btn btn-default" ng-click="resetComplains()">重置</button>
+</div>
+
+<div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid"
+     style="height:400px;margin-top: 20px;"></div>
+
+<div class="modal " id="complain-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span style="line-height: 20px;color: #9d9d9d;" ng-show="gettingDetails">
+                    <img src="/res/gif/loading.gif" alt="读取中动图"/>
+                    <span style="margin-left:5px;">获取投诉详情中...</span>
+                </span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="complain-photo-con"></div>
+                <div class="complain-info-con">
+                    <button class="btn btn-sm btn-danger" ng-click="deletePhoto(complainDetail.photo.id)">删除</button>
+                    <div class="photo-owner-info-con">
+                        <img src="/res/img/default-photo.png" ng-src="{{currentPhotoOwner.head.url}}" alt="用户头像"/>
+                        <span ng-bind="currentPhotoOwner.nickName"></span>
+                        <span ng-bind="currentPhotoOwner.sex=='M'?'男':'女'"></span>
+                        <button class="btn btn-sm btn-default"
+                                ng-click="gaveWarn(complainDetail.photo.id,currentPhotoOwner.userId)"
+                                ng-disabled="sendingWarn">警告</button>
+                        <button class="btn btn-sm btn-default" ng-click="freezeUser(currentPhotoOwner.userId)"
+                                ng-bind="currentPhotoOwner.userBase.freeze==1?'已冻结':'冻结用户'"
+                                ng-disabled="currentPhotoOwner.userBase.freeze==1"></button>
+                    </div>
+                    <div class="photo-info-con">
+                        <div ng-bind="complainDetail.photo.content?complainDetail.photo.content:'无文字内容'"></div>
+                        <i class="fa fa-heart" aria-hidden="true"></i><span ng-bind="complainDetail.photo.likeNumber"></span>
+                        <div class="photo-create-time" ng-bind="complainDetail.photo.createTime"></div>
+                    </div>
+                </div>
+                <div class="complain-list-con">
+                    <div class="complain-item-con" ng-repeat="c in complainDetail.complainList">
+                        <img src="/res/img/default-photo.png" ng-src="{{c.user.head.url}}" alt="用户头像"/>
+                        <span class="complain-item-user-name" ng-bind="c.user.nickName"></span>
+                        <span ng-bind="c.content"></span>
+                        <span class="complain-item-time" ng-bind="c.fromNow"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

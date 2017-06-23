@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.InterestUserDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.InterestUser">
+        <id column="pu_interest_user_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_interest_user_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_interest_user_interest_id" property="interestId" jdbcType="BIGINT"/>
+        <result column="pu_interest_user_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+
+        <association property="interest" column="pu_interest_user_interest_id"
+                     javaType="com.geetion.puputuan.model.Interest"
+                     resultMap="com.geetion.puputuan.dao.InterestDAO.BaseResultMap"/>
+
+    </resultMap>
+    <sql id="tableProperty">
+        pu_interest_user.id as pu_interest_user_id,
+        pu_interest_user.user_id as pu_interest_user_user_id,
+        pu_interest_user.interest_id as pu_interest_user_interest_id,
+        pu_interest_user.create_time as pu_interest_user_create_time
+    </sql>
+
+    <insert id="insertBatch" parameterType="java.util.Map" useGeneratedKeys="true">
+        INSERT INTO pu_interest_user
+        (user_id,interest_id)
+        VALUES
+        <foreach collection="interestIds" index="index" item="item" separator=",">
+            ( #{userId},#{item})
+        </foreach>
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_interest_user
+        where pu_interest_user.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectWithInterestByParam" resultMap="com.geetion.puputuan.dao.InterestDAO.BaseResultMap"
+            parameterType="java.lang.Long">
+        select
+        <include refid="com.geetion.puputuan.dao.InterestDAO.tableProperty"/>
+        from pu_interest_user
+        LEFT JOIN pu_interest on pu_interest.id = pu_interest_user.interest_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_interest_user.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_interest_user.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="interestId != null">
+                and pu_interest_user.interest_id = #{interestId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_interest_user.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_interest_user.create_time desc
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_interest_user
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_interest_user.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_interest_user.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="interestId != null">
+                and pu_interest_user.interest_id = #{interestId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_interest_user.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_interest_user.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_interest_user
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_interest_user.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_interest_user.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="interestId != null">
+                and pu_interest_user.interest_id = #{interestId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_interest_user.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_interest_user.id desc
+        limit 1
+    </select>
+
+    <select id="selectInterestIds" resultType="java.lang.Long">
+        select
+        pu_interest_user.interest_id
+        from pu_interest_user
+        <where>
+            pu_interest_user.user_id in
+            <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+        DELETE FROM pu_interest_user
+        WHERE pu_interest_user.user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

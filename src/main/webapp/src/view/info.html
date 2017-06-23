@@ -1,0 +1,111 @@
+<div class="console-sub-title">
+    资讯管理
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div>
+    <div class="form-inline" style="margin-bottom: 20px;">
+        <div class="form-group clearfix">
+            <label class="sr-only" for="searchKey">搜索属性</label>
+            <select type="searchKey" class="form-control" id="searchKey" ng-model="searchParams.key">
+                <option value="title">标题</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="searchVal">搜索关键字</label>
+            <input type="text" class="form-control ng-pristine ng-valid" id="searchVal" placeholder="输入关键字"
+                   ng-model="searchParams.val">
+        </div>
+
+        <span style="margin-left: 10px;">发布时间</span>
+
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="formDate">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="searchParams.sendTimeBegin"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <datetimepicker data-ng-model="searchParams.sendTimeBegin"
+                                data-datetimepicker-config="{ dropdownSelector: '#formDate', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+        <span>-</span>
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="toDate">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="searchParams.sendTimeEnd"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <datetimepicker data-ng-model="searchParams.sendTimeEnd"
+                                data-datetimepicker-config="{ dropdownSelector: '#toDate', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+
+        <button type="button" class="btn btn-default" ng-click="searchInfosData()">筛选</button>
+        <button type="button" class="btn btn-default" ng-click="resetInfosData()">重置</button>
+
+        <button type="button" class="btn btn-default pull-right ml10" ng-click="getInfoDetails()">
+            发布
+        </button>
+        <button type="button" class="btn btn-default pull-right ml10" ng-click="chgInfosStuta(true)">恢复</button>
+        <button type="button" class="btn btn-danger pull-right ml10" ng-click="chgInfosStuta(false)">屏蔽</button>
+    </div>
+</div>
+
+<div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+<div class="modal " id="info-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="info.id?'编辑':'发布'+'资讯'"></h4>
+            </div>
+            <form class="form-horizontal" ng-submit="saveInfo()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title" class="col-md-2 control-label">标题：</label>
+
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="title" placeholder="标题" ng-model="info.title"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link" class="col-md-2 control-label">链接：</label>
+
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="link" placeholder="链接" ng-model="info.url"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link" class="col-md-2 control-label">上传图片：</label>
+
+                        <div class="col-md-10">
+                            <img style="width: 128px;height: 128px" alt="用户头像" id="company-logo"
+                                 data-default-src="/res/img/default-photo.png" data-async-img data-async-id="{{info.imageId}}">
+                            <button class="btn btn-default" ngf-select="selectFiles($files)"
+                                    accept="image/*">上传
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" ng-bind="info.id?'修改':'发布'"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

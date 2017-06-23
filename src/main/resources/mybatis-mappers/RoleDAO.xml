@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geetion.generic.permission.dao.RoleDAO">
+
+    <resultMap id="BaseResultMap" type="com.geetion.generic.permission.pojo.Role">
+
+        <id column="geetion_role_id" property="id" jdbcType="BIGINT"/>
+        <result column="geetion_role_role" property="role" jdbcType="VARCHAR"/>
+        <result column="geetion_role_name" property="name" jdbcType="VARCHAR"/>
+        <result column="geetion_role_extra" property="extra" jdbcType="VARCHAR"/>
+        <result column="geetion_role_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <sql id="tableProperty">
+        geetion_role.id AS geetion_role_id,
+        geetion_role.role AS geetion_role_role,
+        geetion_role.name AS geetion_role_name,
+        geetion_role.extra AS geetion_role_extra,
+        geetion_role.create_time AS geetion_role_create_time
+    </sql>
+
+    <select id="selectPk" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_role
+        WHERE geetion_role.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByRole" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_role
+        WHERE geetion_role.role = #{role,jdbcType=VARCHAR}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_role
+    </select>
+
+    <select id="selectParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_role
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_role.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="role != null">
+                AND geetion_role.role = #{role,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                AND geetion_role.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="extra != null">
+                AND geetion_role.extra = #{extra,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                AND geetion_role.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by geetion_role.create_time
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM geetion_role
+        WHERE geetion_role.id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.geetion.generic.permission.pojo.Role"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO geetion_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="role != null">
+                role,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="extra != null">
+                extra,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="role != null">
+                #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="extra != null">
+                #{extra,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.geetion.generic.permission.pojo.Role">
+        UPDATE geetion_role
+        <set>
+            <if test="role != null">
+                role = #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="extra != null">
+                extra = #{extra,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE geetion_role.id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updateParam" parameterType="java.util.Map">
+        UPDATE geetion_role
+        <set>
+            <if test="role != null">
+                role = #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="extra != null">
+                extra = #{extra,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_role.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="role != null">
+                AND role = #{role,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                AND name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="extra != null">
+                AND extra = #{password,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </update>
+
+</mapper>

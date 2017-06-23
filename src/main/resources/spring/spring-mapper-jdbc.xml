@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+       default-lazy-init="false"
+       default-init-method="init" default-destroy-method="close">
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!-- 防御SQL注入攻击 -->
+    <bean id="wallFilter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="dbType" value="mysql"/>
+    </bean>
+
+
+
+
+    <!-- DruidDataSource参考配置 - https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_DruidDataSource%E5%8F%82%E8%80%83%E9%85%8D%E7%BD%AE -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}" />
+        <!-- 配置密码加密  -->
+        <property name="filters" value="config" />
+        <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${publicKey}" />
+        <!--<property name="connectProperties">-->
+            <!--<props>-->
+                <!--<prop key="druid.stat.logSlowSql">true</prop>-->
+                <!--<prop key="druid.stat.slowSqlMillis">5000</prop>-->
+                <!--<prop key="connectTimeout">1000</prop>-->
+                <!--<prop key="socketTimeout">3000</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1"/>
+        <!-- 最小连接池数量 -->
+        <property name="minIdle" value="2"/>
+        <!-- maxActive -->
+        <property name="maxActive" value="20"/>
+
+        <!-- 配置获取连接等待超时的时间，单位是毫秒 -->
+        <property name="maxWait" value="60000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="timeBetweenLogStatsMillis" value="300000"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <!--要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100-->
+        <property name="maxOpenPreparedStatements" value="20"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <!--<property name="poolPreparedStatements" value="false"/>-->
+        <!--<property name="maxPoolPreparedStatementPerConnectionSize"-->
+                  <!--value="20"/>-->
+
+        <!-- 配置监控统计拦截的filters -->
+        <!--<property name="filters" value="stat,slf4j"/>-->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="wallFilter"/>
+            </list>
+        </property>
+
+    </bean>
+</beans>

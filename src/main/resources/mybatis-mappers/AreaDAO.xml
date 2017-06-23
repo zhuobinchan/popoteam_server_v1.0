@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geetion.generic.districtmodule.dao.AreaDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.generic.districtmodule.pojo.District">
+        <id column="geetion_area_id" jdbcType="BIGINT" property="id"/>
+        <result column="geetion_area_code" jdbcType="INTEGER" property="code"/>
+        <result column="geetion_area_name" jdbcType="VARCHAR" property="name"/>
+        <result column="geetion_area_parent" jdbcType="INTEGER" property="parent"/>
+        <result column="geetion_area_level" jdbcType="INTEGER" property="level"/>
+    </resultMap>
+    <sql id="tableProperty">
+    geetion_area.id as geetion_area_id,
+    geetion_area.code as geetion_area_code,
+    geetion_area.name as geetion_area_name,
+    geetion_area.parent as geetion_area_parent,
+    geetion_area.level as geetion_area_level
+    </sql>
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from geetion_area
+        where geetion_area.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from geetion_area
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="code != null">
+                and geetion_area.code = #{code}
+            </if>
+            <if test="name != null">
+                and geetion_area.name = #{name}
+            </if>
+            <if test="parent != null">
+                and geetion_area.parent = #{parent}
+            </if>
+            <if test="level != null">
+                and geetion_area.level = #{level}
+            </if>
+        </trim>
+    </select>
+    <delete id="delete" parameterType="java.lang.Long">
+    delete from geetion_area
+    where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.geetion.generic.districtmodule.pojo.District">
+        insert into geetion_area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="parent != null">
+                parent,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                #{code,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                #{parent,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.geetion.generic.districtmodule.pojo.District">
+        update geetion_area
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                parent = #{parent,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

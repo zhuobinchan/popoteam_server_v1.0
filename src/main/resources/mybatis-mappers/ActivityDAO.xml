@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ActivityDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Activity">
+        <id column="pu_activity_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_activity_name" property="name" jdbcType="VARCHAR"/>
+        <result column="pu_activity_room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="pu_activity_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_activity_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_activity_super_like" property="superLike" jdbcType="INTEGER"/>
+        <result column="pu_activity_expire_time" property="expireTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_activity_expire_type" property="expireType" jdbcType="INTEGER"/>
+        <result column="pu_activity_is_expire" property="isExpire" javaType="INTEGER"/>
+        <result column="pu_activity_group_a_id" property="groupAId" jdbcType="BIGINT"/>
+        <result column="pu_activity_group_b_id" property="groupBId" jdbcType="BIGINT"/>
+        <result column="pu_activity_group_a_name" property="groupAName" jdbcType="VARCHAR"/>
+        <result column="pu_activity_group_b_name" property="groupBName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMapWithActivityDetailCount" type="com.geetion.puputuan.pojo.ActivityDetailWithCount"
+               extends="BaseResultMap">
+        <result column="pu_activity_member_count" property="activityMemberCount" jdbcType="INTEGER"/>
+        <result column="pu_activity_duration" property="duration" javaType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMapActivityStatisData" type="com.geetion.puputuan.pojo.ActivityStatisData">
+        <result column="pu_activity_date" property="date" jdbcType="VARCHAR"/>
+        <result column="pu_activity_total" property="activityTotal" jdbcType="INTEGER"/>
+        <result column="pu_activity_valid_total" property="activityValidTotal" jdbcType="INTEGER"/>
+        <result column="pu_activity_city" property="activityCity" jdbcType="VARCHAR"/>
+        <result column="pu_activity_super_like" property="activitySuperLike" jdbcType="INTEGER"/>
+        <result column="pu_activity_member_avg" property="activityMemberAvg" jdbcType="INTEGER"/>
+        <result column="pu_activity_sasb" property="activitySasb" jdbcType="INTEGER"/>
+        <result column="pu_activity_sadb" property="activitySadb" jdbcType="INTEGER"/>
+        <result column="pu_activity_scsb" property="activityScsb" jdbcType="INTEGER"/>
+        <result column="pu_activity_scdb" property="activityScdb" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+    pu_activity.id as pu_activity_id,
+    pu_activity.name as pu_activity_name,
+    pu_activity.room_id as pu_activity_room_id,
+    pu_activity.type as pu_activity_type,
+    pu_activity.create_time as pu_activity_create_time,
+    pu_activity.super_like as pu_activity_super_like,
+    pu_activity.expire_time as pu_activity_expire_time,
+    pu_activity.expire_type as pu_activity_expire_type,
+    pu_activity.is_expire as pu_activity_is_expire,
+    pu_activity.group_a_id as pu_activity_group_a_id,
+    pu_activity.group_b_id as pu_activity_group_b_id
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_activity
+        where pu_activity.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        (select name from pu_group  WHERE pu_group.id = pu_activity.group_a_id) as pu_activity_group_a_name,
+        (select name from pu_group  WHERE pu_group.id = pu_activity.group_b_id) as pu_activity_group_b_name
+        from pu_activity
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_activity.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="groupAId != null and selectBoth == null">
+                and pu_activity.group_a_id = #{groupAId,jdbcType=BIGINT}
+            </if>
+            <if test="groupBId != null and selectBoth == null">
+                and pu_activity.group_b_id = #{groupBId,jdbcType=BIGINT}
+            </if>
+            <if test="roomId != null">
+                and pu_activity.room_id = #{roomId,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_activity.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_activity.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="userId != null">
+                and pu_activity.id in(
+                SELECT pu_activity_member.activity_id from pu_activity_member WHERE pu_activity_member.user_id = #{userId,jdbcType=BIGINT} AND
+                pu_activity_member.status = 1
+                )
+            </if>
+            <if test="types">
+                and pu_activity.type in
+                <foreach collection="types" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hours != null">
+                and timestampdiff(HOUR,pu_activity.create_time,sysdate()) >= #{hours,jdbcType=INTEGER}
+            </if>
+            <if test="superLike != null">
+                and pu_activity.super_like = #{superLike,jdbcType=INTEGER}
+            </if>
+            <if test="isExpire != null">
+                and pu_activity.is_expire = #{isExpire,jdbcType=INTEGER}
+            </if>
+            <if test="selectBoth != null and groupAId != null and groupBId != null">
+                and (
+                 pu_activity.group_a_id = #{groupAId,jdbcType=BIGINT}
+                OR pu_activity.group_b_id = #{groupBId,jdbcType=BIGINT}
+                )
+            </if>
+        </trim>
+        order by pu_activity.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_activity
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_activity.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="groupAId != null">
+                and pu_activity.group_a_id = #{groupAId,jdbcType=BIGINT}
+            </if>
+            <if test="groupBId != null">
+                and pu_activity.group_b_id = #{groupBId,jdbcType=BIGINT}
+            </if>
+            <if test="roomId != null">
+                and pu_activity.room_id = #{roomId,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_activity.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_activity.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="uniqueId != null">
+                and if(
+                unique_id is not null,
+                unique_id = #{uniqueId,jdbcType=VARCHAR},
+                (concat(group_a_id, group_b_id) = #{uniqueId,jdbcType=VARCHAR} OR concat(group_b_id, group_a_id) = #{uniqueId,jdbcType=VARCHAR})
+                )
+            </if>
+        </trim>
+        order by pu_activity.id desc
+        limit 1
+    </select>
+
+    <!-- 根据用户id查询当前用户是否有在进行中的约会 -->
+    <select id="selectByUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM
+        pu_activity
+        LEFT JOIN pu_group AS pu_group_male ON pu_group_male.id = pu_activity.group_a_id
+        LEFT JOIN pu_group AS pu_group_female ON pu_group_female.id = pu_activity.group_b_id
+        LEFT JOIN pu_group_member AS pu_group_member_male ON pu_group_male.id = pu_group_member_male.group_id
+        LEFT JOIN pu_group_member AS pu_group_member_female ON pu_group_female.id = pu_group_member_female.group_id
+        LEFT JOIN pu_user AS pu_user_male ON pu_group_member_male.user_id = pu_user_male.user_id
+        LEFT JOIN pu_user AS pu_user_female ON pu_group_member_female.user_id = pu_user_female.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_activity.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="groupAId != null">
+                and pu_activity.group_a_id = #{groupAId,jdbcType=BIGINT}
+            </if>
+            <if test="groupBId != null">
+                and pu_activity.group_b_id = #{groupBId,jdbcType=BIGINT}
+            </if>
+            <if test="roomId != null">
+                and pu_activity.room_id = #{roomId,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_activity.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="types != null">
+                and pu_activity.type IN
+                <foreach collection="types" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="userId != null">
+                and (
+                pu_user_male.user_id = #{userId,jdbcType=BIGINT}
+                OR pu_user_female.user_id = #{userId,jdbcType=BIGINT}
+                )
+            </if>
+
+            <if test="status != null">
+                and (
+                pu_group_male.status = #{status,jdbcType=INTEGER}
+                OR pu_group_female.status = #{status,jdbcType=INTEGER}
+                )
+            </if>
+        </trim>
+        GROUP BY pu_activity.id
+        order by pu_activity.create_time desc
+        limit 1
+    </select>
+
+    <!-- 根据activityId查询约会中的用户 男女双方 -->
+    <select id="selectMember" parameterType="java.util.Map" resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap">
+        (
+        SELECT
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.JobDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.InterestDAO.tableProperty"/>
+        FROM
+        pu_activity
+        LEFT JOIN pu_group ON pu_group.id = pu_activity.group_a_id
+        LEFT JOIN pu_group_member ON pu_group.id = pu_group_member.group_id
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        LEFT JOIN pu_job_user ON pu_job_user.user_id = pu_user.user_id
+        LEFT JOIN pu_job on pu_job.id = pu_job_user.job_id
+        LEFT JOIN pu_interest_user ON pu_interest_user.user_id = pu_user.user_id
+        LEFT JOIN pu_interest on pu_interest.id = pu_interest_user.interest_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_activity.type = #{type,jdbcType=INTEGER}
+            </if>
+
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+        </trim>
+        )
+        UNION DISTINCT
+        (
+        SELECT
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.JobDAO.tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.InterestDAO.tableProperty"/>
+        FROM
+        pu_activity
+        LEFT JOIN pu_group ON pu_group.id = pu_activity.group_b_id
+        LEFT JOIN pu_group_member ON pu_group.id = pu_group_member.group_id
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        LEFT JOIN pu_job_user ON pu_job_user.user_id = pu_user.user_id
+        LEFT JOIN pu_job on pu_job.id = pu_job_user.job_id
+        LEFT JOIN pu_interest_user ON pu_interest_user.user_id = pu_user.user_id
+        LEFT JOIN pu_interest on pu_interest.id = pu_interest_user.interest_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_activity.type = #{type,jdbcType=INTEGER}
+            </if>
+
+            <if test="status != null">
+                and pu_group_member.status = #{status,jdbcType=INTEGER}
+            </if>
+        </trim>
+        )
+    </select>
+
+    <!-- 查询可以评价的异性非好友用户，如果某异性用户签到过，就算退出也可以被评价 -->
+    <select id="selectEvaluateUser" parameterType="java.util.Map"
+            resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap">
+        SELECT
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        FROM pu_sign, pu_activity
+        <!-- 如果要评价异性用户的本人是男性，则异性用户是 female_group_id，如果是女性，则异性用户是 male_group_id
+            if(exp1,exp2,exp3) 如果exp1为true，则取exp2，否则取exp3
+        -->
+        LEFT JOIN pu_group ON pu_group.id = if((SELECT pu_user.sex FROM pu_user WHERE pu_user.user_id =
+        #{userId,jdbcType=BIGINT}) = 'M', pu_activity.group_b_id, pu_activity.group_a_id)
+        LEFT JOIN pu_group_member ON pu_group.id = pu_group_member.group_id
+        LEFT JOIN pu_user ON pu_group_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+
+        WHERE pu_activity.id = #{activityId,jdbcType=BIGINT}
+        <!-- 查询出的异性与本人不是好友关系 -->
+        AND pu_user.user_id NOT IN
+        (
+        SELECT DISTINCT pu_friend_relationship.friend_id FROM pu_friend_relationship
+        WHERE pu_friend_relationship.user_id = #{userId,jdbcType=BIGINT}
+        )
+        <!-- 查询出的用户不应包含自己 -->
+        AND pu_user.user_id != #{userId,jdbcType=BIGINT}
+        AND
+        (
+        <!-- 异性用户是在群聊中的状态 -->
+        pu_group_member.status = #{status,jdbcType=INTEGER}
+        <!-- 或者是已经签到过的异性用户（就算该异性用户退出也要评价） -->
+        OR
+        ( pu_sign.activity_id = #{activityId,jdbcType=BIGINT} AND pu_user.user_id = pu_sign.user_id ) )
+        GROUP BY pu_user.user_id
+    </select>
+
+    <update id="updateActivityDissBatch"  parameterType="java.util.List">
+            UPDATE pu_activity
+            <set>
+             pu_activity.type = 1,
+             pu_activity.expire_type = 0,
+             pu_activity.expire_time = now()
+            </set>
+        WHERE pu_activity.id IN
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+             #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectActivityDetailCount" parameterType="java.util.Map" resultMap="BaseResultMapWithActivityDetailCount">
+        SELECT
+          <include refid="tableProperty"/>,
+        (select name from pu_group  WHERE pu_group.id = pu_activity.group_a_id) as pu_activity_group_a_name,
+        (select name from pu_group  WHERE pu_group.id = pu_activity.group_b_id) as pu_activity_group_b_name,
+          ifnull(pu_activity_member_count.activity_member_count, 0) as pu_activity_member_count,
+          if(pu_activity.type = 0,TIMESTAMPDIFF(HOUR,pu_activity.create_time,now()),
+              TIMESTAMPDIFF(HOUR,pu_activity.create_time,pu_activity.expire_time)) as pu_activity_duration
+        from (
+          SELECT *
+            FROM pu_activity
+          UNION ALL
+          SELECT *
+            FROM pu_activity_history
+        ) pu_activity
+        LEFT JOIN (
+            SELECT count(*) as activity_member_count , b.activity_id
+              FROM
+                (
+                SELECT * FROM pu_activity_member
+                UNION ALL
+                SELECT * FROM pu_activity_member_his
+                ) b
+              GROUP BY b.activity_id
+            ) AS pu_activity_member_count on pu_activity_member_count.activity_id = pu_activity.id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity.id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="name != null">
+                and pu_activity.name like concat('%', #{name,jdbcType=VARCHAR} ,'%')
+            </if>
+            <if test="type != null " >
+                and pu_activity.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="groupName != null">
+                and (
+                  pu_activity.group_a_id in (
+                  SELECT id FROM pu_group WHERE name like concat('%', #{groupName,jdbcType=VARCHAR}, '%')
+                  )
+                  OR
+                  pu_activity.group_b_id in (
+                  SELECT id FROM pu_group WHERE name like concat('%', #{groupName,jdbcType=VARCHAR}, '%')
+                  ))
+            </if>
+            <if test="registerTimeBegin != null">
+                and DATE(pu_activity.create_time) &gt;= DATE(#{registerTimeBegin,jdbcType=TIMESTAMP})
+            </if>
+            <if test="registerTimeEnd != null">
+                and DATE(pu_activity.create_time) &lt;= DATE(#{registerTimeEnd,jdbcType=TIMESTAMP})
+            </if>
+        </trim>
+        order by
+        <if test="orderBy == null">
+         pu_activity_id DESC
+        </if>
+        <if test="orderBy != null">
+          ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectActivityStatisData" parameterType="java.util.Map" resultMap="BaseResultMapActivityStatisData">
+        SELECT
+                <if test="type == 1">
+                    DATE_FORMAT(create_time,'%Y%m') AS pu_activity_date,
+                </if>
+                <if test="type == 2 or type == 3 or type == 4">
+                    DATE_FORMAT(create_time,'%Y%m%d') AS pu_activity_date,
+                </if>
+                count(*) AS pu_activity_total,
+                sum(super_like) AS pu_activity_super_like,
+                ceil((sum(pu_female_member.total) + sum(pu_male_member.total)) * 0.1 / count(*) * 10) AS pu_activity_member_avg
+        FROM (
+        SELECT * from pu_activity
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="type == 3">
+                and pu_activity.create_time &gt;= date_sub(curdate(),INTERVAL WEEKDAY(curdate()) DAY)
+                and pu_activity.create_time &lt;= date_sub(curdate(),INTERVAL WEEKDAY(curdate()) - 6 DAY)
+            </if>
+            <if test="type == 4">
+                and pu_activity.create_time &gt;= date_sub(curdate(),INTERVAL WEEKDAY(curdate()) + 7 DAY)
+                and pu_activity.create_time &lt;= date_sub(curdate(),INTERVAL WEEKDAY(curdate()) + 1 DAY)
+            </if>
+        </trim>
+        ) pu_activity
+        LEFT JOIN (
+            SELECT count(*) total ,group_id from pu_group_member
+            GROUP BY pu_group_member.group_id
+            ) AS pu_female_member ON pu_activity.group_b_id = pu_female_member.group_id
+        LEFT JOIN (
+                      SELECT count(*) total,group_id from pu_group_member
+                      GROUP BY pu_group_member.group_id
+           ) AS pu_male_member ON pu_activity.group_a_id = pu_male_member.group_id
+        group by pu_activity_date
+    </select>
+
+    <select id="selectActivityMatchStatisData" parameterType="java.util.Map" resultMap="BaseResultMapActivityStatisData">
+
+        SELECT
+        <if test="type == 1">
+            DATE_FORMAT(create_time,'%Y%m') AS pu_activity_date,
+        </if>
+        <if test="type == 2">
+            DATE_FORMAT(create_time,'%Y%m%d') AS pu_activity_date,
+        </if>
+        count(*) AS pu_activity_total,
+        sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id = pu_male_group.bar_id, 1, 0)) AS pu_activity_sasb,
+        sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id &lt;&gt; pu_male_group.bar_id, 1, 0)) AS pu_activity_sadb,
+        sum(if(pu_female_group.city_id = pu_male_group.city_id and pu_female_group.bar_id = pu_male_group.bar_id, 1, 0))
+        - sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id = pu_male_group.bar_id, 1, 0))
+        AS pu_activity_scsb,
+        sum(if(pu_female_group.city_id = pu_male_group.city_id and pu_female_group.bar_id &lt;&gt; pu_male_group.bar_id, 1, 0))
+        - sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id &lt;&gt; pu_male_group.bar_id, 1, 0))
+        AS pu_activity_scdb
+        FROM pu_activity
+        LEFT JOIN (SELECT id, city_id ,area_id, bar_id FROM pu_group) AS pu_female_group
+        ON pu_activity.group_b_id = pu_female_group.id
+        LEFT JOIN (SELECT id, city_id ,area_id, bar_id FROM pu_group) AS pu_male_group
+        ON pu_activity.group_a_id = pu_male_group.id
+        GROUP BY pu_activity_date
+    </select>
+
+    <select id="selectActivityAreaStatisData" parameterType="java.util.Map" resultMap="BaseResultMapActivityStatisData">
+        SELECT
+        <if test="type == 1">
+            DATE_FORMAT(pu_activity.create_time,'%Y%m') AS pu_activity_date,
+        </if>
+        <if test="type == 2">
+            DATE_FORMAT(pu_activity.create_time,'%Y%m%d') AS pu_activity_date,
+        </if>
+        count(*) AS pu_activity_total,
+        pu_group.city AS pu_activity_city,
+        sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id = pu_male_group.bar_id, 1, 0)) AS pu_activity_sasb,
+        sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id &lt;&gt; pu_male_group.bar_id, 1, 0)) AS pu_activity_sadb,
+        sum(if(pu_female_group.city_id = pu_male_group.city_id and pu_female_group.bar_id = pu_male_group.bar_id, 1, 0))
+        - sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id = pu_male_group.bar_id, 1, 0))
+        AS pu_activity_scsb,
+        sum(if(pu_female_group.city_id = pu_male_group.city_id and pu_female_group.bar_id &lt;&gt; pu_male_group.bar_id, 1, 0))
+        - sum(if(pu_female_group.area_id = pu_male_group.area_id and pu_female_group.bar_id &lt;&gt; pu_male_group.bar_id, 1, 0))
+        AS pu_activity_scdb
+        FROM pu_activity
+        LEFT JOIN pu_group on pu_activity.group_a_id = pu_group.id
+        LEFT JOIN (SELECT id, city_id ,area_id, bar_id FROM pu_group) AS pu_female_group
+        ON pu_activity.group_b_id = pu_female_group.id
+        LEFT JOIN (SELECT id, city_id ,area_id, bar_id FROM pu_group) AS pu_male_group
+        ON pu_activity.group_a_id = pu_male_group.id
+        GROUP BY pu_activity_date , pu_activity_city
+    </select>
+
+    <select id="selectActivitySumStatisData" parameterType="java.util.Map" resultMap="BaseResultMapActivityStatisData">
+        SELECT count(*) pu_activity_total,
+          sum(if(pu_activity.type = 0, 1, 0)) pu_activity_valid_total,
+          sum(super_like) pu_activity_super_like
+        from (
+        SELECT * FROM pu_activity
+        UNION ALL
+        SELECT * FROM pu_activity_history
+        ) pu_activity
+    </select>
+
+    <select id="selectActivitySumForBar" parameterType="java.util.Map" resultMap="BaseResultMapActivityStatisData">
+        SELECT
+        <if test="type == 0">
+            date_format(create_time,'%Y-%m-%d') pu_activity_date,
+        </if>
+        <if test="type == 1">
+            date_format(create_time,'%Y-%m') pu_activity_date,
+        </if>
+        count(*) pu_activity_total
+        from pu_activity
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="type == 0">
+                date_format(create_time,'%Y-%m-%d') BETWEEN date_format(#{beginTime,jdbcType=TIMESTAMP},'%Y-%m-%d') AND date_format(#{endTime,jdbcType=TIMESTAMP},'%Y-%m-%d')
+            </if>
+            <if test="type == 1">
+                date_format(create_time,'%Y-%m') BETWEEN date_format(#{beginTime,jdbcType=TIMESTAMP},'%Y-%m') AND date_format(#{endTime,jdbcType=TIMESTAMP},'%Y-%m')
+            </if>
+        </trim>
+        GROUP BY
+        <if test="type == 0">
+            date_format(create_time,'%Y-%m-%d')
+        </if>
+        <if test="type == 1">
+            date_format(create_time,'%Y-%m')
+        </if>
+
+    </select>
+
+    <delete id="deleteActivityBatch" parameterType="java.util.List">
+        DELETE from pu_activity WHERE pu_activity.id IN
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <update id="updateActivityIsExpireByGroupIds" parameterType="java.util.Map">
+        UPDATE pu_activity
+        SET pu_activity.is_expire = #{isExpire,jdbcType=INTEGER}
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="groupAIds != null and groupAIds.size>0">
+                pu_activity.group_a_id IN
+                <foreach item="item" index="index" collection="groupAIds" open="("
+                         separator="," close=");">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="groupBIds != null and groupBIds.size>0">
+                pu_activity.group_b_id IN
+                <foreach item="item" index="index" collection="groupBIds" open="("
+                         separator="," close=");">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </update>
+
+</mapper>

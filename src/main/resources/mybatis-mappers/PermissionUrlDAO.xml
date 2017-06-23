@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geetion.generic.permission.dao.PermissionUrlDAO">
+
+    <resultMap id="BaseResultMap" type="com.geetion.generic.permission.pojo.PermissionUrl">
+
+        <id column="geetion_permission_url_id" property="id" jdbcType="BIGINT"/>
+        <result column="geetion_permission_url_permission_id" property="permissionId" jdbcType="BIGINT"/>
+        <result column="geetion_permission_url_url" property="url" jdbcType="VARCHAR"/>
+        <result column="geetion_permission_url_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="permission" javaType="com.geetion.generic.permission.pojo.Permission"
+                     column="geetion_permission_url_permission_id"
+                     resultMap="com.geetion.generic.permission.dao.PermissionDAO.BaseResultMap"/>
+
+    </resultMap>
+
+    <sql id="tableProperty">
+        geetion_permission_url.id AS geetion_permission_url_id,
+        geetion_permission_url.permission_id AS geetion_permission_url_permission_id,
+        geetion_permission_url.url AS geetion_permission_url_url,
+        geetion_permission_url.create_time AS geetion_permission_url_create_time
+    </sql>
+
+    <select id="selectPk" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_permission_url
+        WHERE geetion_permission_url.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_permission_url
+    </select>
+
+    <select id="selectParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_permission_url
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_permission_url.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="permissionId != null">
+                AND geetion_permission_url.permission_id = #{permissionId,jdbcType=BIGINT}
+            </if>
+            <if test="url != null">
+                AND geetion_permission_url.url = #{url,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                AND geetion_permission_url.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by geetion_permission_url.create_time
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM geetion_permission_url
+        WHERE geetion_permission_url.id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.geetion.generic.permission.pojo.PermissionUrl"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO geetion_permission_url
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permissionId != null">
+                permission_id,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="permissionId != null">
+                #{permissionId,jdbcType=BIGINT},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.geetion.generic.permission.pojo.PermissionUrl">
+        UPDATE geetion_permission_url
+        <set>
+            <if test="permissionId != null">
+                permission_id = #{permissionId,jdbcType=BIGINT},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE geetion_permission_url.id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updateParam" parameterType="java.util.Map">
+        UPDATE geetion_permission_url
+        <set>
+            <if test="permissionId != null">
+                permission_id = #{permissionId,jdbcType=BIGINT},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_permission_url.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="permissionId != null">
+                AND permission_id = #{permissionId,jdbcType=BIGINT}
+            </if>
+            <if test="url != null">
+                AND url = #{url,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </update>
+
+
+    <select id="selectAllUrlNeedPermission" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.permission.dao.PermissionDAO.tableProperty"/>
+        FROM geetion_permission_url
+        LEFT JOIN geetion_permission ON geetion_permission_url.permission_id = geetion_permission.id
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.Map" useGeneratedKeys="true">
+
+        INSERT INTO geetion_permission_url
+        (permission_id,url)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{list[${index}].permissionId},#{list[${index}].url})
+        </foreach>
+
+    </insert>
+
+    <select id="selectUrlByPermissionList" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from geetion_permission_url
+        where geetion_permission_url.permission_id in
+        <foreach collection="permissionList" item="permission" open="(" close=")" separator=",">
+            #{permission.id}
+        </foreach>
+    </select>
+
+</mapper>

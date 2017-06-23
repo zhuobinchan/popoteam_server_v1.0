@@ -1,0 +1,161 @@
+<div class="console-sub-title">
+    活动类型管理
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+
+<div class="form-inline search-con">
+    <div class="form-group">
+        <select class="form-control" ng-model="searchParams.key">
+            <option value="name">活动名称</option>
+            <option value="content">活动内容</option>
+            <option value="id">活动id</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="输入关键字"
+               ng-model="searchParams.val">
+    </div>
+    <button type="button" class="btn btn-default" ng-click="searchBarsData()">筛选</button>
+    <button type="button" class="btn btn-default" ng-click="resetBarsData()">重置</button>
+</div>
+
+<div class="form-inline clearfix" style="margin-bottom: 10px;">
+    <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#bar-detail">
+        新建
+    </button>
+    <!--<button type="button" class="btn btn-danger pull-right" ng-click="deleteAdvertisement()">删除</button>-->
+    <button type="button" class="btn btn-danger pull-right" ng-click = "showStatusDialog()">屏蔽</button>
+    <button type="button" class="btn btn-danger pull-right" ng-click="chgBarsStatus(1)">解除屏蔽</button>
+</div>
+
+<div ui-grid="barGridOpts" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+<div class="modal " id="bar-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="(bar.id?'编辑':'新建')+'活动类型管理'"></h4>
+            </div>
+            <form class="form-horizontal" ng-submit="saveBar()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-md-2 control-label">活动名称：</label>
+
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="name" placeholder="活动名称" ng-model="bar.name"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="content" class="col-md-2 control-label">活动内容：</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="content" placeholder="活动内容" ng-model="bar.content"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="!bar.id">
+                        <label for="status" class="col-md-2 control-label">是否屏蔽：</label>
+                        <div class="col-md-10">
+                            <select id="status" class="form-control" ng-model="bar.status"
+                                    ng-options="l.val as l.txt for l in barStatusOpts">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority" class="col-md-2 control-label">优先级别：</label>
+                        <div class="col-md-10">
+                            <input type="number" class="form-control" id="priority" placeholder="优先级别" ng-model="bar.priority"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="is_expire" class="col-md-2 control-label">是否永久有效：</label>
+                        <div class="col-md-10">
+                            <select id="is_expire" class="form-control" ng-model="bar.isExpire"
+                                    ng-options="l.val as l.txt for l in trueOrFalseOpts">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="action_type" class="col-md-2 control-label">是否进入商城：</label>
+                        <div class="col-md-10">
+                            <select id="action_type" class="form-control" ng-model="bar.actionType"
+                                    ng-options="l.val as l.txt for l in trueOrFalseOpts">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imageFile">请选择要上传栏位图片<font color="red">（**请上传图片）</font></label>
+                        <input id = "imageFile" type="file" ngf-select="" ng-model="imageFile" name="imageFile">
+                    </div>
+                    <div class="form-group">
+                        <label for="imageSmallFile">请选择要上传栏位的缩略图<font color="red">（**请上传图片） 注意：更新时需要注意的是两个图片的后缀名必须一致</font></label>
+                        <input id = "imageSmallFile" type="file" ngf-select="" ng-model="imageSmallFile" name="imageFile">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" ng-bind="bar.id?'修改':'新建'"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal " id="status-Dialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="">活动类型解散</h4>
+            </div>
+            <form class="form-horizontal" ng-submit="chgBarStatusAndDissolve()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-md-2 control-label">队伍处置(app端没有收到相关提示)：</label>
+                        <label class="radio-inline">
+                            <input type="radio" name="groupDissolveRadios" id="inlineRadio2" value="1" ng-model="groupDissolve" ng-checked="true" required> 队伍解散
+                        </label>
+
+                        <label class="radio-inline">
+                            <input type="radio" name="groupDissolveRadios" id="inlineRadio1" value="2" ng-model="groupDissolve" ng-click = "showOtherBarSelect()"> 转换其他活动类型
+                        </label>
+
+                    </div>
+                    <div class="form-group"  style="display: none" id="otherBarsSelect">
+                        <label for="name" class="col-md-2 control-label">选择其他活动：</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="otherBarId"
+                                    ng-options="l.id as l.name for l in otherBars" >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="activityRadioDiv">
+                        <label for="name" class="col-md-2 control-label">约会处置：</label>
+
+                        <label class="radio-inline">
+                            <input type="radio" name="activityRadios" id="inlineRadio3" value="1" ng-model="activityDissolve" ng-checked="true" required> 自动解散
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="activityRadios" id="inlineRadio4" value="2" ng-model="activityDissolve"> 马上解散
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="activityRadios" id="inlineRadio5" value="3" ng-model="activityDissolve"> 不处理
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

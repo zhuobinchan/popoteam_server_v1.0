@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.FancyDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Fancy">
+        <id column="pu_fancy_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_fancy_name" property="name" jdbcType="VARCHAR"/>
+        <result column="pu_fancy_identify" property="identify" jdbcType="BIGINT"/>
+        <result column="pu_fancy_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_fancy_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_fancy_have_select" property="haveSelect" jdbcType="BIT"/>
+        <result column="pu_fancy_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_fancy.id as pu_fancy_id,
+        pu_fancy.name as pu_fancy_name,
+        pu_fancy.identify as pu_fancy_identify,
+        pu_fancy.type as pu_fancy_type,
+        pu_fancy.status as pu_fancy_status,
+        pu_fancy.create_time as pu_fancy_create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_fancy
+        where pu_fancy.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_fancy
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_fancy.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_fancy.name LIKE concat('%', #{name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="identify != null">
+                and pu_fancy.identify = #{identify,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_fancy.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_fancy.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_fancy.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_fancy.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_fancy
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_fancy.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_fancy.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="identify != null">
+                and pu_fancy.identify = #{identify,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_fancy.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and pu_fancy.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_fancy.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_fancy.id desc
+        limit 1
+    </select>
+
+    <!-- 查询自己的个人职业，其中包含了 自己没有选择但是是属于系统的职业 -->
+    <select id="selectParamWithSystem" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="tableProperty"/>,
+        if(pu_fancy_user.fancy_id = pu_fancy.id, TRUE, FALSE) AS pu_fancy_have_select
+        FROM pu_user
+        LEFT JOIN pu_fancy_user ON pu_fancy_user.user_id = pu_user.user_id
+        LEFT JOIN pu_fancy ON (pu_fancy.id = pu_fancy_user.fancy_id OR pu_fancy.type = 1) AND
+        pu_fancy.status = 1
+        where pu_user.user_id = #{userId,jdbcType=BIGINT}
+        GROUP BY pu_fancy.id
+    </select>
+
+    <update id="updateBatch" parameterType="java.util.Map">
+        UPDATE pu_fancy
+        <set>
+            <if test="name != null">
+                pu_fancy.name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="identify != null">
+                pu_fancy.identify = #{identify,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                pu_fancy.type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                pu_fancy.status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        <where>
+            <if test="ids != null">
+                pu_fancy.id IN(
+                <foreach collection="ids" index="index" item="item" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </update>
+
+</mapper>

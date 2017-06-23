@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="42f27931-ed9b-4c10-a859-0b0953607bc2" name="pop" url="http://www.popoteam.com">
+        <fileTransfer host="www.popoteam.com" port="22" rootFolder="/root" accessType="SFTP" password="df9fdfdedfcddfc8dfc2dfdfdf92df8cdff4dff3" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="9aa21b0f-2bcf-45a5-8083-be8433ecaa6b" name="dev" url="http://dev.popoteam.com">
+        <fileTransfer host="dev.popoteam.com" port="22" rootFolder="/root" accessType="SFTP" password="df9edfd8dfccdfdcdfcddfd3df9ddff4df8fdffe" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

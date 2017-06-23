@@ -1,0 +1,1 @@
+ALTER TABLE popoteam.pu_group_member_history DROP FOREIGN KEY fk_group_membe_historyr_ref_group;

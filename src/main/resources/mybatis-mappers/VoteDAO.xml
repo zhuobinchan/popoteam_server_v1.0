@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.VoteDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Vote">
+        <id column="pu_vote_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_vote_recommend_id" property="recommendId" jdbcType="BIGINT"/>
+        <result column="pu_vote_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_vote_is_like" property="isLike" jdbcType="BIT"/>
+        <result column="pu_vote_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+    pu_vote.id as pu_vote_id, pu_vote.recommend_id as pu_vote_recommend_id, pu_vote.user_id as pu_vote_user_id, 
+    pu_vote.is_like as pu_vote_is_like, pu_vote.create_time as pu_vote_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_vote
+        where pu_vote.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_vote
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_vote.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_vote.recommend_id = #{recommendId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_vote.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="isLike != null">
+                and pu_vote.is_like = #{isLike,jdbcType=BIT}
+            </if>
+            <if test="createTime != null">
+                and pu_vote.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_vote.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_vote
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_vote.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_vote.recommend_id = #{recommendId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_vote.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="isLike != null">
+                and pu_vote.is_like = #{isLike,jdbcType=BIT}
+            </if>
+            <if test="createTime != null">
+                and pu_vote.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_vote.id desc
+        limit 1
+    </select>
+</mapper>

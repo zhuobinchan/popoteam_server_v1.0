@@ -1,0 +1,142 @@
+<div class="console-sub-title">
+    权限管理
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<ul id="mytab" class="nav nav-tabs">
+    <li class="active"><a href="#basic" data-toggle="tab" ng-click = "search(1)">系统管理员</a></li>
+    <li><a href="#role" data-toggle="tab" ng-click = "search(2)">系统角色</a></li>
+</ul>
+
+
+
+<div class="tab-content">
+    <div class="tab-pane active" id="basic">
+        <div class="form-inline clearfix" style="margin-top: 10px; margin-bottom: 10px;">
+            <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" data-toggle="modal" data-target="#admin-detail">
+                新增
+            </button>
+        </div>
+        <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+    </div>
+    <div class="tab-pane" id="role">
+        <div class="form-inline clearfix" style="margin-top: 10px; margin-bottom: 10px;">
+            <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" data-toggle="modal" data-target="#role-detail">
+                新增
+            </button>
+        </div>
+        <div ui-grid="roleGridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal " id="admin-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="(admin.userId?'编辑':'新建')+'管理员'"></h4>
+            </div>
+            <form class="form-horizontal" ng-submit="saveAdmin()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="account" class="col-md-2 control-label">账号名称：</label>
+
+                        <div class="col-md-8">
+                            <div ng-if="admin.userId == ''">
+                                <input type="text" class="form-control" id="account" placeholder="账号名称" ng-model="admin.account"
+                                       required>
+                            </div>
+                            <div ng-if="admin.userId != ''">
+                                <p>{{ admin.account }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-2 control-label">密码：</label>
+                        <div class="col-md-8">
+
+                            <div ng-if="admin.userId == ''">
+                                <input type="password" class="form-control" id="password" placeholder="密码" ng-model="admin.password"
+                                       required>
+                            </div>
+                            <div ng-if="admin.userId != ''">
+                                <p>*******</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="roles" class="col-md-2 control-label">角色：</label>
+
+                        <div class="col-md-8">
+                            <div ng-repeat="item in roleList">
+                                <input type="checkbox" id="roles"  ng-checked="isSelected(item.id)" value="item.id" ng-click="toggleSelection(item.id)"> {{item.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" ng-bind="admin.userId?'修改':'新建'"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal " id="role-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" ng-bind="(role.roleId?'编辑':'新建')+'角色'"></h4>
+            </div>
+            <form class="form-horizontal" ng-submit="saveRole()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="roleName" class="col-md-2 control-label">角色名称：</label>
+                        <div class="col-md-8">
+                            <!--<div ng-if="role.roleId == ''">-->
+                                <input type="text" class="form-control" id="roleName" placeholder="角色名称" ng-model="role.roleName"
+                                       value="{{ role.roleName }}" required >
+                            <!--</div>-->
+                            <!--<div ng-if="role.userId != ''">-->
+                                <!--<p>{{ role.roleName }}</p>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra" class="col-md-2 control-label">描述：</label>
+                        <div class="col-md-8">
+                            <!--<div ng-if="role.roleId == ''">-->
+                                <input type="text" class="form-control" id="extra" placeholder="角色描述" ng-model="role.extra"
+                                       value="{{ role.extra }}" required>
+                            <!--</div>-->
+                            <!--<div ng-if="role.userId != ''">-->
+                                <!--<p>{{ role.extra }}</p>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="permission" class="col-md-2 control-label">菜单权限：</label>
+
+                        <div class="col-md-8">
+                            <div ng-repeat="item in permissionList">
+                                <input type="checkbox" id="permission"  ng-checked="isRoleSelected(item.id)" value="item.id" ng-click="toggleRoleSelection(item.id)"> {{item.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" ng-bind="role.roleId?'修改':'新建'"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

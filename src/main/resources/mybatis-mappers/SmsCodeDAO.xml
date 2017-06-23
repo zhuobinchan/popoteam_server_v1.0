@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.generic.sms.dao.SmsCodeDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.generic.sms.pojo.SmsCode">
+        <id column="geetion_sms_code_id" property="id" jdbcType="BIGINT"/>
+        <result column="geetion_sms_code_account" property="account" jdbcType="VARCHAR"/>
+        <result column="geetion_sms_code_code" property="code" jdbcType="VARCHAR"/>
+        <result column="geetion_sms_code_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="geetion_sms_code_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="geetion_sms_code_valid_millisecond" property="validMillisecond" jdbcType="BIGINT"/>
+        <result column="geetion_sms_code_type" property="type" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="tableProperty">
+    geetion_sms_code.id as geetion_sms_code_id, geetion_sms_code.account as geetion_sms_code_account, 
+    geetion_sms_code.code as geetion_sms_code_code, geetion_sms_code.create_time as geetion_sms_code_create_time, 
+    geetion_sms_code.update_time as geetion_sms_code_update_time, geetion_sms_code.valid_millisecond as geetion_sms_code_valid_millisecond, 
+    geetion_sms_code.type as geetion_sms_code_type
+    </sql>
+
+    <select id="selectPk" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from geetion_sms_code
+        where geetion_sms_code.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from geetion_sms_code
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and geetion_sms_code.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="account != null">
+                and geetion_sms_code.account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="code != null">
+                and geetion_sms_code.code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and geetion_sms_code.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null">
+                and geetion_sms_code.update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="validMillisecond != null">
+                and geetion_sms_code.valid_millisecond = #{validMillisecond,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and geetion_sms_code.type = #{type,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by geetion_sms_code.id desc
+    </select>
+
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from geetion_sms_code
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and geetion_sms_code.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="account != null">
+                and geetion_sms_code.account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="code != null">
+                and geetion_sms_code.code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and geetion_sms_code.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null">
+                and geetion_sms_code.update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="validMillisecond != null">
+                and geetion_sms_code.valid_millisecond = #{validMillisecond,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and geetion_sms_code.type = #{type,jdbcType=INTEGER}
+            </if>
+        </trim>
+        order by geetion_sms_code.id desc
+        limit 1
+    </select>
+
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_sms_code
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM geetion_sms_code
+        WHERE geetion_sms_code.id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.geetion.generic.sms.pojo.SmsCode" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO geetion_sms_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="account != null">
+                account ,
+            </if>
+            <if test="code != null">
+                code ,
+            </if>
+            <if test="updateTime != null">
+                update_time ,
+            </if>
+            <if test="validMillisecond != null">
+                valid_millisecond ,
+            </if>
+            <if test="type != null">
+                type ,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validMillisecond != null">
+                #{validMillisecond,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.geetion.generic.sms.pojo.SmsCode">
+        UPDATE geetion_sms_code
+        <set>
+            <if test="id != null">
+                geetion_sms_code.id = #{id,jdbcType=BIGINT},
+            </if>
+            <if test="account != null">
+                geetion_sms_code.account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                geetion_sms_code.code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                geetion_sms_code.create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                geetion_sms_code.update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validMillisecond != null">
+                geetion_sms_code.valid_millisecond = #{validMillisecond,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                geetion_sms_code.type = #{type,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE geetion_sms_code.id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

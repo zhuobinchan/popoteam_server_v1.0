@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ActivityMemberDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.ActivityMember">
+        <id column="pu_activity_member_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_activity_member_user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="pu_activity_member_activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="pu_activity_status" property="status" jdbcType="BIGINT"/>
+        <result column="pu_activity_create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="pu_activity_group_id" property="groupId" jdbcType="BIGINT"/>
+
+        <association property="user" column="pu_group_member_user_id"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+    </resultMap>
+    <sql id="tableProperty">
+    pu_activity_member.id as pu_activity_member_id,
+    pu_activity_member.user_id as pu_activity_member_user_id,
+    pu_activity_member.activity_id as pu_activity_member_activity_id,
+    pu_activity_member.status as pu_activity_status,
+    pu_activity_member.create_time as pu_activity_create_time,
+    pu_activity_member.group_id as pu_activity_group_id
+    </sql>
+
+    <select id="selectActivityMemberByParam" parameterType="java.util.Map" resultMap="BaseResultMap" statementType="CALLABLE">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>
+        from pu_activity_member
+        LEFT JOIN pu_user ON pu_activity_member.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_activity_member.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_activity_member.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="activityId != null">
+                and pu_activity_member.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and pu_activity_member.status = #{status,jdbcType=BIGINT}
+            </if>
+            <if test="statusList != null">
+                and pu_activity_member.status in
+                <foreach collection="statusList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
+            </if>
+        </trim>
+        order by pu_activity_member.id desc
+    </select>
+
+    <update id="update" parameterType="com.geetion.puputuan.model.ActivityMember">
+        UPDATE pu_activity_member
+        <set>
+                pu_activity_member.status = #{status,jdbcType=BIGINT}
+        </set>
+        WHERE pu_activity_member.activity_id = #{activityId,jdbcType=BIGINT}
+        and pu_activity_member.user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteActivityMemberBatch" parameterType="java.util.List">
+        DELETE FROM pu_activity_member WHERE pu_activity_member.activity_id in
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+</mapper>

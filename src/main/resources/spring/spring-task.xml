@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task-3.2.xsd
+   ">
+    <task:annotation-driven />
+    <bean id="scanWaitingMatchGroup" class="com.geetion.puputuan.engine.ScanWaitingMatchGroup"></bean>
+    <bean id="scanWaitingGroupInRedis" class="com.geetion.puputuan.engine.ScanWaitingGroupInRedis"></bean>
+    <bean id="reSendSMS" class="com.task.ReSendSMS"></bean>
+    <bean id="cleanActivityJob" class="com.task.CleanActivityJob"></bean>
+    <bean id="msgHisJob" class="com.task.MsgHisJob"></bean>
+    <task:scheduled-tasks>
+        <!--
+            这里表示的是每隔五秒执行一次
+        -->
+        <!--<task:scheduled ref="scanWaitingMatchGroup" method="scanWaitingList" cron="0 58 17 * * ?" />-->
+        <!--<task:scheduled ref="scanWaitingMatchGroup" method="scanWaitingList" cron="0/10 * * * * ?" />
+        <task:scheduled ref="scanWaitingMatchGroup" method="scanNoMatchGroupWaitingList" cron="0/60 * * * * ?" /> -->
+
+        <!--不采用cron配置，需要延迟加载该任务，随程序一同启动时，有些spring bean未初始化完，会出错  -->
+        <!-- initial-delay 表示延迟， fixed-delay 表示每隔多少毫秒-->
+        <task:scheduled ref="scanWaitingGroupInRedis"  method="scanWaitingList" initial-delay="60000" fixed-delay="5000"/>
+
+        <task:scheduled ref="reSendSMS"  method="excute" initial-delay="60000" fixed-delay="5000"/>
+
+        <task:scheduled ref="cleanActivityJob" method="excuteCleanJob" cron="0 0 0/3 * * ?" />
+
+        <!-- 0 0 4 * * ?  每天凌晨4点 -->
+        <task:scheduled ref="msgHisJob" method="executeMsgJob" cron="0 0 4 * * ?" />
+        <task:scheduled ref="msgHisJob" method="executeNoticeJob" cron="0 0 4 * * ?" />
+
+
+    </task:scheduled-tasks>
+
+</beans>

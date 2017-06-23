@@ -1,0 +1,14 @@
+<div id="selectLocation" class="form-inline">
+    <select class="form-control" ng-change="changeProvince()" ng-model="province" ng-options="p.name for p in provinceList">
+        <option value="">省份/直轄市</option>
+    </select>
+    <select class="form-control" ng-change="changeCity()" ng-model="city" ng-options="c.name for c in cityList">
+        <option value="">市</option>
+    </select>
+    <select class="form-control" ng-change="changeArea()" ng-model="area" ng-options="a.name for a in areaList">
+        <option value="">地区</option>
+    </select>
+    <div style="width:348px;">
+        <!--<input type="text" class="form-control" ng-model="detailAddress" placeholder="详细地址" ng-disabled="country=='' || country==null" />-->
+    </div>
+</div>

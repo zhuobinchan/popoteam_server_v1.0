@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX pu_activity_male_group_id_female_group_id_uindex ON popoteam.pu_activity (male_group_id, female_group_id);

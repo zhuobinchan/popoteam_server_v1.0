@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ConsultationDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Consultation">
+        <id column="pu_consultation_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_consultation_title" property="title" jdbcType="VARCHAR"/>
+        <result column="pu_consultation_url" property="url" jdbcType="VARCHAR"/>
+        <result column="pu_consultation_image_id" property="imageId" jdbcType="BIGINT"/>
+        <result column="pu_consultation_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_consultation_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="image" column="pu_consultation_image_id"
+                     javaType="com.geetion.generic.serverfile.model.File"
+                     resultMap="com.geetion.generic.serverfile.dao.FileDAO.BaseResultMap"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_consultation.id as pu_consultation_id,
+        pu_consultation.title as pu_consultation_title,
+        pu_consultation.url as pu_consultation_url,
+        pu_consultation.image_id as pu_consultation_image_id,
+        pu_consultation.type as pu_consultation_type,
+        pu_consultation.create_time as pu_consultation_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_consultation
+        where pu_consultation.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.serverfile.dao.FileDAO.tableProperty"/>
+        from pu_consultation
+        LEFT JOIN geetion_file ON geetion_file.id = pu_consultation.image_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_consultation.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="title != null">
+                and pu_consultation.title LIKE concat('%', #{title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="url != null">
+                and pu_consultation.url = #{url,jdbcType=VARCHAR}
+            </if>
+            <if test="imageId != null">
+                and pu_consultation.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_consultation.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_consultation.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sendTimeBegin != null">
+                and pu_consultation.create_time &gt;= #{sendTimeBegin,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sendTimeEnd != null">
+                and pu_consultation.create_time &lt;= #{sendTimeEnd,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_consultation.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.generic.serverfile.dao.FileDAO.tableProperty"/>
+        from pu_consultation
+        LEFT JOIN geetion_file ON geetion_file.id = pu_consultation.image_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_consultation.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="title != null">
+                and pu_consultation.title LIKE concat('%', #{title,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="url != null">
+                and pu_consultation.url = #{url,jdbcType=VARCHAR}
+            </if>
+            <if test="imageId != null">
+                and pu_consultation.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and pu_consultation.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_consultation.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sendTimeBegin != null">
+                and pu_consultation.create_time &gt;= #{sendTimeBegin,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sendTimeEnd != null">
+                and pu_consultation.create_time &lt;= #{sendTimeEnd,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_consultation.id desc
+        limit 1
+    </select>
+</mapper>

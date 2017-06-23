@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ComplainUserDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.ComplainUser" >
+        <id column="pu_user_complain_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_user_complain_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_user_complain_identify" property="identify" jdbcType="VARCHAR"/>
+        <result column="pu_user_complain_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_user_complain_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_user_complain_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_user_complain.id as pu_user_complain_id,
+        pu_user_complain.user_id as pu_user_complain_user_id,
+        pu_user_complain.identify as pu_user_complain_identify,
+        pu_user_complain.type as pu_user_complain_type,
+        pu_user_complain.content as pu_user_complain_content,
+        pu_user_complain.create_time as pu_user_complain_create_time
+    </sql>
+
+</mapper>

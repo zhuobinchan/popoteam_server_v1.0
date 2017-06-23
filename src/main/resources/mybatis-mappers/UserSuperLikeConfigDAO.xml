@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UserSuperLikeConfigDAO" >
+  <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.UserSuperLikeConfig" >
+    <id column="pu_user_super_like_config_id" property="id" jdbcType="BIGINT" />
+    <result column="pu_user_super_like_config_user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="pu_user_super_like_config_times" property="times" jdbcType="INTEGER" />
+    <result column="pu_user_super_like_config_create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <association property="user" column="pu_user_super_like_config_user_id"
+                 javaType="com.geetion.puputuan.model.User"
+                 resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+
+
+  </resultMap>
+  <sql id="tableProperty" >
+    pu_user_super_like_config.id as pu_user_super_like_config_id,
+    pu_user_super_like_config.user_id as pu_user_super_like_config_user_id,
+    pu_user_super_like_config.times as pu_user_super_like_config_times,
+    pu_user_super_like_config.create_time as pu_user_super_like_config_create_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="tableProperty"/>,
+    <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+    from pu_user_super_like_config
+    LEFT JOIN pu_user ON pu_user_super_like_config.user_id = pu_user.user_id
+    where pu_user_super_like_config.id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="tableProperty"/>,
+    <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+    from pu_user_super_like_config
+    LEFT JOIN pu_user ON pu_user_super_like_config.user_id = pu_user.user_id
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="userId != null">
+        and pu_user_super_like_config.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </trim>
+    order by pu_user_super_like_config.id desc
+    limit 1
+  </select>
+
+  <select id="selectParam" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="tableProperty" />,
+    <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+    from pu_user_super_like_config
+    LEFT JOIN pu_user ON pu_user_super_like_config.user_id = pu_user.user_id
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="userId != null">
+        and pu_user_super_like_config.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="null!=identifies and identifies.length>0">
+        and pu_user.identify IN
+        <foreach item="item" index="index" collection="identifies" open="("
+                 separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="nickName != null">
+        and pu_user.nick_name like concat('%',#{nickName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="phone != null">
+        and pu_user.phone like concat('%', #{phone,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="sex != null">
+        and pu_user.sex = #{sex,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+</mapper>

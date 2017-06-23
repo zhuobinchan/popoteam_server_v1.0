@@ -1,0 +1,308 @@
+<style>
+    .sum-table .table-body{
+        border:3px solid transparent;
+        margin: 10px;
+        background-color:#f1f2f2
+    }
+    .sum-table .desc{
+        margin-bottom: 10px;
+        padding-bottom: 15px;
+        color:#666;
+        border-bottom:1px solid #ddd;
+    }
+    .sum-table ul{
+        margin: 0px;
+        margin-bottom: 10px;
+        padding: 0px;
+        list-style: none;
+    }
+    .sum-table ul li{
+        padding: 6px 0px;
+        padding-left: 11px;
+        font-size: 13px;
+        line-height: 13px;
+        color: #666;
+    }
+</style>
+<div class="console-sub-title">
+    用户列表
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#collapseOne">
+        <h4 class="panel-title">
+            用户数据基础统计
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse">
+        <div class="container-fluid sum-table">
+            <div class="row-fluid">
+                <div class="col-md-3 table-body">
+                    <h3>用户总体数据</h3>
+                    <div class="desc">
+                        系统中用户数据总量分析
+                    </div>
+                    <ul>
+                        <li>用户总量:{{ userSumStatisData.userTotal }}</li>
+                        <li>微信用户:{{ userSumStatisData.wechatTotal }}</li>
+                        <li>男性用户:{{ userSumStatisData.maleTotal }}</li>
+                        <li>女性用户:{{ userSumStatisData.femaleTotal }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-3 table-body">
+                    <h3>新增用户</h3>
+                    <div class="desc">
+                        当天新增用户数量分析
+                    </div>
+                    <ul>
+                        <li>新增用户数量:{{ userSumStatisData.userTodayTotal }}</li>
+                        <li>男性用户数量:{{ userSumStatisData.maleTodayTotal }}</li>
+                        <li>女性用户数量:{{ userSumStatisData.femaleTodayTotal }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-3 table-body">
+                    <h3>好友数量汇总</h3>
+                    <div class="desc">
+                        对用户的好友数量分析
+                    </div>
+                    <ul>
+                        <li>0个好友:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ userSumStatisData.friendOneTotal }}</li>
+                        <li>1至3个好友:&nbsp;{{ userSumStatisData.friendTwoTotal }}</li>
+                        <li>4个以上好友:{{ userSumStatisData.friendThreeTotal }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="panel panel-default">-->
+    <!--<div class="panel-heading">用户总体数据</div>-->
+    <!--<p><span>用户数量:{{ userSumStatisData.userTotal }}</span></p>-->
+    <!--<p><span>微信用户:{{ userSumStatisData.wechatTotal }}</span></p>-->
+    <!--<p><span>男性用户:{{ userSumStatisData.maleTotal }}</span></p>-->
+    <!--<p><span>女性用户:{{ userSumStatisData.femaleTotal }}</span></p>-->
+
+    <!--&lt;!&ndash;<table class="table" style="margin-top: 10px;margin-left: 10px;margin-right: 10px ; width: 90%">&ndash;&gt;-->
+        <!--&lt;!&ndash;<thead>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th>总体用户数量</th>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th>总体微信用户</th>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th>总体男性用户</th>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th>总体女性用户</th>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;</thead>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tbody>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+            <!--&lt;!&ndash;<td>{{ userSumStatisData.userTotal }}</td>&ndash;&gt;-->
+            <!--&lt;!&ndash;<td>{{ userSumStatisData.wechatTotal }}</td>&ndash;&gt;-->
+            <!--&lt;!&ndash;<td>{{ userSumStatisData.maleTotal }}</td>&ndash;&gt;-->
+            <!--&lt;!&ndash;<td>{{ userSumStatisData.femaleTotal }}</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;</tbody>&ndash;&gt;-->
+    <!--&lt;!&ndash;</table>&ndash;&gt;-->
+<!--</div>-->
+<div class="panel panel-default">
+    <div class="panel-heading">用户列表</div>
+
+    <div class="form-inline search-con" style="margin-top: 10px;margin-left: 10px;margin-right: 10px;">
+
+        <select class="form-control" ng-model="searchType">
+            <option value="identify">ID</option>
+            <option value="nickName">昵称</option>
+            <option value="phone">手机</option>
+            <option value="age">年龄</option>
+        </select>
+
+        <input type="text" class="form-control" placeholder="输入关键字" style="max-width:140px;"
+               ng-model="searchContent">
+
+        <select class="form-control"
+                ng-model="params.provinceId"
+                ng-options="province.code as province.name for province in provinceList"
+                ng-change="getDistrict(2,params.provinceId)">
+            <option value="">省份</option>
+        </select>
+        <select class="form-control info-input-select"
+                ng-model="params.cityId"
+                ng-options="city.code as city.name for city in cityList ">
+            <option value="">城市</option>
+        </select>
+
+
+        <select class="form-control" ng-model="params.sex">
+            <option value="">性别</option>
+            <option value="M">男</option>
+            <option value="F">女</option>
+        </select>
+
+        <span style="margin-left: 10px;">注册时间</span>
+
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="params.registerTimeBegin"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker data-ng-model="params.registerTimeBegin"
+                                data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+        <span>-</span>
+
+        <div class="input-group dropdown" style="width: 140px;">
+            <a class="dropdown-toggle my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="params.registerTimeEnd"
+                           data-date-time-input="YYYY-MM-DD" readonly>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker data-ng-model="params.registerTimeEnd"
+                                data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select', startView: 'month', minView: 'day'}">
+                </datetimepicker>
+            </ul>
+        </div>
+
+        <button type="button" class="btn btn-default" ng-click="searchParam()">筛选</button>
+        <button type="button" class="btn btn-default" ng-click="reset()">重置</button>
+
+    </div>
+
+    <div class="form-inline clearfix" style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="addBlackList()">
+            拉黑
+        </button>
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="freeze(true)">
+            冻结
+        </button>
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="freeze(false)">
+            解冻
+        </button>
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" ng-click="export()">
+            导出
+        </button>
+        <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;" data-toggle="modal" data-target="#exportUserByFile">
+            条件导出
+        </button>
+        <button type="button" class="btn btn-default pull-right" style="margin-right: 5px;" data-toggle="modal" data-target="#showCarouselDiaLog">
+            查看所有用户头像
+        </button>
+    </div>
+
+    <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+
+    <div data-ng-include="'src/tpl/announce-detail.tpl.html'"></div>
+
+
+    <div class="modal " id="exportUserByFile" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">用户条件导出数据</h4>
+                    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+                </div>
+                <form class="form-horizontal" ng-submit="exportByFile()">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>类型:</label>
+                            <label class="radio-inline">
+                                <input type="radio" name="userTypeRadios" id="inlineRadio1" value="1" ng-model="userType" ng-checked="true" required> 用户ID
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="userTypeRadios" id="inlineRadio2" value="2" ng-model="userType"> 手机号码
+                            </label>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="userFile">请选择要上传txt文件<font color="red">（**请上传txt文件）</font></label>
+                                <input id = "userFile" type="file" ngf-select="" ng-model="userFile" name="userFile">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">导出</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+
+                        <h4><strong>备注：</strong><br/></h4>
+                        <dl>
+                            <dt>1、导入文件模板格式如下：</dt>
+                            <dd>
+                                600044 或 +8613430222222
+                            </dd>
+                            <dt>3、导入说明：</dt>
+                            <dd>
+                                比例：600044<br/>
+                                说明：每一行为该用户的电话或者id
+                            </dd>
+                        </dl>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal " id="showHeadImageDiaLog" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">用户头像</h4>
+                </div>
+                <div class="container">
+                    <img style="max-height:100%;max-width:550px;" src="/res/img/default-photo.png" ng-src="{{BigHeadImg}}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal " id="showCarouselDiaLog" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">用户头像</h4>
+                </div>
+
+                <div id="headImgCarousel" class="carousel">
+                    <!-- 轮播（Carousel）项目 -->
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <h4 class="modal-title">用户头像开始轮播（请向左侧点击）</h4>
+                            <img src="/res/img/default-photo.png" alt="">
+                        </div>
+                        <div class="item" ng-repeat="userDatas in gridOptions.data track by $index">
+                            <h4 class="modal-title">用户ID:{{userDatas.identify}}</h4>
+                            <img src="/res/img/default-photo.png" ng-src="{{userDatas.head.url}}" alt="">
+                        </div>
+                    </div>
+                    <!-- 轮播（Carousel）导航 -->
+                    <a class="carousel-control left" href="#headImgCarousel"
+                       data-slide="prev">&lsaquo;</a>
+                    <a class="carousel-control right" href="#headImgCarousel"
+                       data-slide="next">&rsaquo;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>

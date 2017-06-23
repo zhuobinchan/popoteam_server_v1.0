@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.SignDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Sign">
+        <id column="pu_sign_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_sign_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_sign_activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="pu_sign_location_id" property="locationId" jdbcType="BIGINT"/>
+        <result column="pu_sign_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="location" column="pu_sign_location_id"
+                     javaType="com.geetion.puputuan.model.Location"
+                     resultMap="com.geetion.puputuan.dao.LocationDAO.BaseResultMap"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_sign.id as pu_sign_id,
+        pu_sign.user_id as pu_sign_user_id,
+        pu_sign.activity_id as pu_sign_activity_id,
+        pu_sign.location_id as pu_sign_location_id,
+        pu_sign.create_time as pu_sign_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.LocationDAO.tableProperty"/>
+        from pu_sign
+        LEFT JOIN pu_location ON pu_location.id = pu_sign.location_id
+        where pu_sign.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.LocationDAO.tableProperty"/>
+        from pu_sign
+        LEFT JOIN pu_location ON pu_location.id = pu_sign.location_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_sign.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_sign.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="activityId != null">
+                and pu_sign.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_sign.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_sign.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_sign.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.LocationDAO.tableProperty"/>
+        from pu_sign
+        LEFT JOIN pu_location ON pu_location.id = pu_sign.location_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_sign.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_sign.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="activityId != null">
+                and pu_sign.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_sign.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null">
+                and pu_sign.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_sign.id desc
+        limit 1
+    </select>
+
+    <select id="selectMaxSignArea" parameterType="java.lang.Long" resultType="java.util.HashMap">
+      select
+      count(*) times , floor(date_format(`pu_sign`.`create_time`,'%k') / 4) time_area
+      FROM `pu_sign`
+      WHERE `pu_sign`.`user_id` = 66
+      GROUP BY time_area
+      ORDER BY times desc
+      limit 1
+    </select>
+
+    <!-- 查询在一个约会中，男女双方是否有一对，之间的距离小于给定的值，无则返回0，有则返回多少人
+     latAndLngDistance 是自己定义的函数，用来计算两个经纬度之间的距离 -->
+    <select id="selectLatAndLngDistance" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM pu_activity
+        LEFT JOIN pu_sign AS pu_sign_male ON pu_activity.id = pu_sign_male.activity_id
+        LEFT JOIN pu_location AS pu_location_male ON pu_location_male.id = pu_sign_male.location_id
+        LEFT JOIN pu_user AS pu_user_male ON pu_user_male.user_id = pu_sign_male.user_id
+        LEFT JOIN pu_sign AS pu_sign_female ON pu_activity.id = pu_sign_female.activity_id
+        LEFT JOIN pu_location AS pu_location_female ON pu_location_female.id = pu_sign_female.location_id
+        LEFT JOIN pu_user AS pu_user_female ON pu_user_female.user_id = pu_sign_female.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="activityId != null">
+                AND pu_activity.id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="distance != null">
+                AND latAndLngDistance(pu_location_male.longitude, pu_location_male.latitude,
+                pu_location_female.longitude, pu_location_female.latitude) &lt; #{distance,jdbcType=DOUBLE}
+            </if>
+            AND pu_user_male.sex = 'M'
+            AND pu_user_female.sex = 'F'
+        </trim>
+    </select>
+
+    <delete id="deleteByParam" parameterType="java.util.Map">
+        DELETE FROM pu_sign
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_sign.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_sign.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="activityId != null">
+                and pu_sign.activity_id = #{activityId,jdbcType=BIGINT}
+            </if>
+            <if test="locationId != null">
+                and pu_sign.location_id = #{locationId,jdbcType=BIGINT}
+            </if>
+        </trim>
+    </delete>
+
+</mapper>

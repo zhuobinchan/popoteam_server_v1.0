@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ComplainDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Complain">
+        <id column="pu_complain_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_complain_photo_id" property="photoId" jdbcType="BIGINT"/>
+        <result column="pu_complain_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_complain_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_complain_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_complain_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="user" column="pu_complain_user_id"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+
+        <association property="photo" column="pu_complain_photo_id"
+                     javaType="com.geetion.puputuan.model.Photo"
+                     resultMap="com.geetion.puputuan.dao.PhotoDAO.BaseResultMap"/>
+
+    </resultMap>
+
+    <!-- 查询被投诉的相册 和 发布者 ，相册点赞数和已被投诉次数-->
+    <resultMap id="BaseResultMapWithPhotoAndUser" type="com.geetion.puputuan.pojo.ComplainWithPhotoAndUser">
+        <id column="pu_complain_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_complain_photo_id" property="photoId" jdbcType="BIGINT"/>
+        <result column="pu_complain_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_complain_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_complain_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_complain_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <!-- 相册点赞数 -->
+        <result column="pu_complain_photo_like_total" property="photoLikeTotal" jdbcType="INTEGER"/>
+        <!-- 被投诉次数 -->
+        <result column="pu_complain_complain_times" property="complainTimes" jdbcType="INTEGER"/>
+
+        <!-- 投诉人 -->
+        <!--<association property="user" column="pu_complain_user_id"-->
+        <!--javaType="com.geetion.puputuan.model.User"-->
+        <!--resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>-->
+        <!-- 被投诉的相册 -->
+        <association property="photo" column="pu_complain_photo_id"
+                     javaType="com.geetion.puputuan.model.Photo"
+                     resultMap="com.geetion.puputuan.dao.PhotoDAO.BaseResultMap"/>
+        <!-- 被投诉的相册的发布者 -->
+        <association property="photoUser" column="pu_photo_user_id"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_complain.id as pu_complain_id,
+        pu_complain.photo_id as pu_complain_photo_id,
+        pu_complain.user_id as pu_complain_user_id,
+        pu_complain.content as pu_complain_content,
+        pu_complain.type as pu_complain_type,
+        pu_complain.create_time as pu_complain_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_complain
+        where pu_complain.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_complain
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_complain.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="photoId != null">
+                and pu_complain.photo_id = #{photoId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_complain.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_complain.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_complain.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_complain.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_complain.id desc
+    </select>
+
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_complain
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_complain.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="photoId != null">
+                and pu_complain.photo_id = #{photoId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_complain.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_complain.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_complain.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_complain.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_complain.id desc
+        limit 1
+    </select>
+
+
+    <select id="selectParamWithComplainUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_complain
+        LEFT JOIN pu_user ON pu_complain.user_id = pu_user.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_complain.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="photoId != null">
+                and pu_complain.photo_id = #{photoId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_complain.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_complain.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_complain.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_complain.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_complain.id desc
+    </select>
+
+    <!-- 查询被投诉的相片的发布者 -->
+    <select id="selecParamtWithPhotoUser" parameterType="java.util.Map" resultMap="BaseResultMapWithPhotoAndUser">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.userbase.dao.UserBaseDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.ProvinceDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.CityDAO.tableProperty"/>,
+        <include refid="com.geetion.generic.districtmodule.dao.AreaDAO.tableProperty"/>,
+        complain_times.times AS pu_complain_complain_times
+        from pu_complain
+        LEFT JOIN pu_photo ON pu_photo.id = pu_complain.photo_id
+        LEFT JOIN pu_user ON pu_photo.user_id = pu_user.user_id
+        LEFT JOIN geetion_user_base ON geetion_user_base.id = pu_user.user_id
+        LEFT JOIN geetion_province ON geetion_province.code = pu_user.province_id
+        LEFT JOIN geetion_city ON geetion_city.code = pu_user.city_id
+        LEFT JOIN geetion_area ON geetion_area.code = pu_user.area_id
+        LEFT JOIN (SELECT COUNT(*) AS times ,pu_user.user_id FROM pu_complain
+        LEFT JOIN pu_photo ON pu_photo.id = pu_complain.photo_id
+        LEFT JOIN pu_user ON pu_photo.user_id = pu_user.user_id
+        GROUP BY pu_user.id) AS complain_times ON pu_user.user_id = complain_times.user_id
+
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="photoId != null">
+                and pu_complain.photo_id = #{photoId,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_complain.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+
+            <if test="complainTimesBegin != null">
+                and complain_times.times &gt;= {complainTimesBegin,jdbcType=INTEGER }
+            </if>
+            <if test="complainTimesEnd != null">
+                and complain_times.times &lt;= {complainTimesEnd,jdbcType=INTEGER }
+            </if>
+
+            <if test="type != null">
+                and pu_photo.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="releaseTimeBegin != null">
+                and DATE(pu_photo.create_time) &gt;= DATE(#{releaseTimeBegin,jdbcType=TIMESTAMP})
+            </if>
+            <if test="releaseTimeEnd != null">
+                and DATE(pu_photo.create_time) &lt;= DATE(#{releaseTimeEnd,jdbcType=TIMESTAMP})
+            </if>
+
+            <if test="phone != null">
+                and pu_user.phone = #{phone,jdbcType=VARCHAR}
+            </if>
+            <if test="nickName != null">
+                and pu_user.nick_name like concat('%',#{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="identify != null">
+                and pu_user.identify like concat('%', #{identify,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="sex != null">
+                and pu_user.sex = #{sex,jdbcType=VARCHAR}
+            </if>
+            <if test="provinceId != null">
+                and pu_user.province_id = #{provinceId,jdbcType=INTEGER}
+            </if>
+            <if test="cityId != null">
+                and pu_user.city_id = #{cityId,jdbcType=INTEGER}
+            </if>
+            <if test="areaId != null">
+                and pu_user.area_id = #{areaId,jdbcType=INTEGER}
+            </if>
+            <!-- 年龄 -->
+            <if test="age != null">
+                and YEAR(CURRENT_DATE) - YEAR(pu_user.birthday) = #{age,jdbcType=INTEGER}
+            </if>
+
+        </trim>
+        GROUP BY pu_complain.photo_id
+        order by pu_complain.id desc
+    </select>
+
+</mapper>

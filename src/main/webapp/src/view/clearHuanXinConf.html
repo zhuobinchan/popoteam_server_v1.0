@@ -1,0 +1,36 @@
+<div class="console-sub-title">
+    清除环信账号
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form role="form">
+            <div class="form-group">
+                <label for="excelInputFile">请选择要过滤的文件（*.txt）</label>
+                <!--<input type="file" id="excelInputFile" file-model="excelFile" name="excelFile">-->
+                <input id = "excelInputFile" type="file" ngf-select="" ng-model="data.groupFile" name="file" ngf-accept="'.txt'" ngf-pattern="'.txt'">
+                <span class="help-block">上传文件为txt文件，一个环信群组为一行，结尾不用分割符（空格），内容为过滤数据，清除环信群组时，会自动过滤。
+                另外，每次执行清除任务时，从环信系统取得数据最大为1000，需要多次手动执行任务</span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-sm btn-danger" ng-click="clear()">清除</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <form role="form">
+            <div class="form-group">
+                <label for="excelFile">请选择要过滤的文件（*.txt）</label>
+                <!--<input type="file" id="excelInputFile" file-model="excelFile" name="excelFile">-->
+                <input id = "excelFile" type="file" ngf-select="" ng-model="data.userFile" name="file" ngf-accept="'.txt'" ngf-pattern="'.txt'">
+                <span class="help-block">说明如上清除群组</span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-sm btn-danger" ng-click="clearUsers()">清除</button>
+            </div>
+        </form>
+    </div>
+</div>

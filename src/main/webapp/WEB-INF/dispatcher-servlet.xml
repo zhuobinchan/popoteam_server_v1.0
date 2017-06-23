@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+             xmlns:cache="http://www.springframework.org/schema/cache"
+             xmlns:mvc="http://www.springframework.org/schema/mvc"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <context:component-scan base-package="com.geetion.puputuan" use-default-filters="false" >
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <beans:import resource="applicationJsonMapper.xml"/>
+
+    <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <beans:property name="ignoreDefaultModelOnRedirect" value="true"/>
+        <beans:property name="webBindingInitializer">
+            <beans:bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+                <beans:property name="conversionService">
+                    <beans:bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
+                </beans:property>
+                <!--<beans:property name="validator">-->
+                    <!--<beans:bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>-->
+                <!--</beans:property>-->
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="defaultExceptionResolver"
+                class="org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver"/>
+    <!--<beans:bean id="exceptionResolver" class="com.geetion.puputuan.web.exception.handler.ExceptionHandler">-->
+        <!--<beans:property name="defaultStatusCode" value="500"/>-->
+        <!--<beans:property name="defaultErrorView" value="error/500"/>-->
+    <!--</beans:bean>-->
+
+    <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" p:maxUploadSize="33554432"/>
+    <cache:annotation-driven/>
+
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <mvc:resources location="/" mapping="/**"/>
+    <!--<mvc:view-controller path="/" view-name="redirect:/"/>-->
+
+</beans:beans>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ActivityMemberHisDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.ActivityMemberHis">
+        <id column="pu_activity_member_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_activity_member_user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="pu_activity_member_activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="pu_activity_status" property="status" jdbcType="BIGINT"/>
+        <result column="pu_activity_create_time" property="createTime" jdbcType="VARCHAR"/>
+
+        <association property="user" column="pu_group_member_user_id"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+    </resultMap>
+    <sql id="tableProperty">
+    pu_activity_member.id as pu_activity_member_id,
+    pu_activity_member.user_id as pu_activity_member_user_id,
+    pu_activity_member.activity_id as pu_activity_member_activity_id,
+    pu_activity_member.status as pu_activity_status,
+    pu_activity_member.create_time as pu_activity_create_time
+    </sql>
+
+
+    <insert id="insertIntoFromActivityMember" parameterType="java.util.List">
+        INSERT into pu_activity_member_his SELECT * FROM pu_activity_member WHERE pu_activity_member.activity_id in
+        <foreach collection="list" index="index" item="item"  open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>;
+    </insert>
+
+</mapper>

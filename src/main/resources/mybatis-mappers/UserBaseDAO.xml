@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.geetion.generic.userbase.dao.UserBaseDAO">
+
+    <resultMap id="BaseResultMap" type="com.geetion.generic.userbase.pojo.UserBase">
+
+        <id column="geetion_user_base_id" property="id" jdbcType="BIGINT"/>
+        <result column="geetion_user_base_account" property="account" jdbcType="VARCHAR"/>
+        <result column="geetion_user_base_password" property="password" jdbcType="VARCHAR"/>
+        <result column="geetion_user_base_name" property="name" jdbcType="VARCHAR"/>
+        <result column="geetion_user_base_token" property="token" jdbcType="VARCHAR"/>
+        <result column="geetion_user_base_freeze" property="freeze" jdbcType="INTEGER"/>
+        <result column="geetion_user_base_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="geetion_user_base_login_time" property="loginTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <sql id="tableProperty">
+        geetion_user_base.id AS geetion_user_base_id,
+        geetion_user_base.account AS geetion_user_base_account,
+        geetion_user_base.password AS geetion_user_base_password,
+        geetion_user_base.name AS geetion_user_base_name,
+        geetion_user_base.token AS geetion_user_base_token,
+        geetion_user_base.freeze AS geetion_user_base_freeze,
+        geetion_user_base.create_time AS geetion_user_create_time,
+        geetion_user_base.login_time AS geetion_user_base_login_time
+    </sql>
+
+    <select id="selectPk" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_user_base
+        WHERE geetion_user_base.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_user_base
+        WHERE geetion_user_base.account = #{account,jdbcType=VARCHAR}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_user_base
+    </select>
+
+    <select id="selectParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="tableProperty"/>
+        FROM geetion_user_base
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="id != null">
+                geetion_user_base.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="account != null">
+                AND geetion_user_base.account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="password != null">
+                AND geetion_user_base.password = #{password,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                AND geetion_user_base.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="token != null">
+                AND geetion_user_base.token = #{token,jdbcType=VARCHAR}
+            </if>
+            <if test="freeze != null">
+                AND geetion_user_base.freeze = #{freeze,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                AND geetion_user_base.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="loginTime != null">
+                AND geetion_user_base.login_time = #{loginTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by geetion_user_base.create_time
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM geetion_user_base
+        WHERE geetion_user_base.id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from geetion_user_base
+        where id in
+        <foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </delete>
+
+    <insert id="insert" parameterType="com.geetion.generic.userbase.pojo.UserBase"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO geetion_user_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="account != null">
+                account,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="token != null">
+                token,
+            </if>
+            <if test="freeze != null">
+                freeze,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="token != null">
+                #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="freeze != null">
+                #{freeze,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.geetion.generic.userbase.pojo.UserBase">
+        UPDATE geetion_user_base
+        <set>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="token != null">
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="freeze != null">
+                freeze = #{freeze,jdbcType=INTEGER},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE geetion_user_base.id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updateWithoutPassword" parameterType="com.geetion.generic.userbase.pojo.UserBase">
+        UPDATE geetion_user_base
+        <set>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="token != null">
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="freeze != null">
+                freeze = #{freeze,jdbcType=INTEGER},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE geetion_user_base.id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateParam" parameterType="java.util.Map">
+        UPDATE geetion_user_base
+        <set>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="token != null">
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="freeze != null">
+                freeze = #{freeze,jdbcType=INTEGER},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                AND name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="token != null">
+                AND token = #{token,jdbcType=VARCHAR}
+            </if>
+            <if test="freeze != null">
+                AND freeze = #{freeze,jdbcType=INTEGER}
+            </if>
+            <if test="loginTime != null">
+                AND login_time = #{loginTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </update>
+
+
+    <update id="updatePassword" parameterType="java.util.Map">
+        UPDATE geetion_user_base
+        <set>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE geetion_user_base.account = #{account,jdbcType=VARCHAR}
+    </update>
+
+    <update id="freezeBatch">
+        update geetion_user_base
+        <set>
+            <if test=" freeze != null">
+                geetion_user_base.freeze = #{freeze},
+            </if>
+            <if test=" token != null">
+                geetion_user_base.token = #{token},
+            </if>
+        </set>
+        where geetion_user_base.id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

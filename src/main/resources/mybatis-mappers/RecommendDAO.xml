@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.RecommendDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Recommend">
+        <id column="pu_recommend_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_recommend_main_group_id" property="mainGroupId" jdbcType="BIGINT"/>
+        <result column="pu_recommend_match_group_id" property="matchGroupId" jdbcType="BIGINT"/>
+        <result column="pu_recommend_score_a" property="scoreA" jdbcType="INTEGER"/>
+        <result column="pu_recommend_score_b" property="scoreB" jdbcType="INTEGER"/>
+        <result column="pu_recommend_score_c" property="scoreC" jdbcType="INTEGER"/>
+        <result column="pu_recommend_score_d" property="scoreD" jdbcType="INTEGER"/>
+        <result column="pu_recommend_score_e" property="scoreE" jdbcType="INTEGER"/>
+        <result column="pu_recommend_score_f" property="scoreF" jdbcType="INTEGER"/>
+        <result column="pu_recommend_weight" property="weight" jdbcType="DOUBLE"/>
+        <result column="pu_recommend_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_recommend_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_recommend.id as pu_recommend_id,
+        pu_recommend.main_group_id as pu_recommend_main_group_id,
+        pu_recommend.match_group_id as pu_recommend_match_group_id,
+        pu_recommend.score_a as pu_recommend_score_a,
+        pu_recommend.score_b as pu_recommend_score_b,
+        pu_recommend.score_c as pu_recommend_score_c,
+        pu_recommend.score_d as pu_recommend_score_d,
+        pu_recommend.score_e as pu_recommend_score_e,
+        pu_recommend.score_f as pu_recommend_score_f,
+        pu_recommend.weight as pu_recommend_weight,
+        pu_recommend.type as pu_recommend_type,
+        pu_recommend.create_time as pu_recommend_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend
+        where pu_recommend.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_recommend.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="mainGroupId != null">
+                and pu_recommend.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="matchGroupId != null">
+                and pu_recommend.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="scoreA != null">
+                and pu_recommend.score_a = #{scoreA,jdbcType=INTEGER}
+            </if>
+            <if test="scoreB != null">
+                and pu_recommend.score_b = #{scoreB,jdbcType=INTEGER}
+            </if>
+            <if test="scoreC != null">
+                and pu_recommend.score_c = #{scoreC,jdbcType=INTEGER}
+            </if>
+            <if test="scoreD != null">
+                and pu_recommend.score_d = #{scoreD,jdbcType=INTEGER}
+            </if>
+            <if test="scoreE != null">
+                and pu_recommend.score_e = #{scoreE,jdbcType=INTEGER}
+            </if>
+            <if test="scoreF != null">
+                and pu_recommend.score_f = #{scoreF,jdbcType=INTEGER}
+            </if>
+            <if test="weight != null">
+                and pu_recommend.weight = #{weight,jdbcType=DOUBLE}
+            </if>
+            <if test="type != null">
+                and pu_recommend.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_recommend.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_recommend.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_recommend.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="mainGroupId != null">
+                and pu_recommend.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="matchGroupId != null">
+                and pu_recommend.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="scoreA != null">
+                and pu_recommend.score_a = #{scoreA,jdbcType=INTEGER}
+            </if>
+            <if test="scoreB != null">
+                and pu_recommend.score_b = #{scoreB,jdbcType=INTEGER}
+            </if>
+            <if test="scoreC != null">
+                and pu_recommend.score_c = #{scoreC,jdbcType=INTEGER}
+            </if>
+            <if test="scoreD != null">
+                and pu_recommend.score_d = #{scoreD,jdbcType=INTEGER}
+            </if>
+            <if test="scoreE != null">
+                and pu_recommend.score_e = #{scoreE,jdbcType=INTEGER}
+            </if>
+            <if test="scoreF != null">
+                and pu_recommend.score_f = #{scoreF,jdbcType=INTEGER}
+            </if>
+            <if test="weight != null">
+                and pu_recommend.weight = #{weight,jdbcType=DOUBLE}
+            </if>
+            <if test="type != null">
+                and pu_recommend.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_recommend.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_recommend.id desc
+        limit 1
+    </select>
+
+    <delete id="deleteByMainId" parameterType="java.lang.Long">
+      delete from pu_recommend where main_group_id = #{id}
+    </delete>
+
+
+    <select id="selectParamByScore" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_recommend.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="mainGroupId != null">
+                and pu_recommend.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="matchGroupId != null">
+                and pu_recommend.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="scoreA != null">
+                and pu_recommend.score_a = #{scoreA,jdbcType=INTEGER}
+            </if>
+            <if test="scoreB != null">
+                and pu_recommend.score_b = #{scoreB,jdbcType=INTEGER}
+            </if>
+            <if test="scoreC != null">
+                and pu_recommend.score_c = #{scoreC,jdbcType=INTEGER}
+            </if>
+            <if test="scoreD != null">
+                and pu_recommend.score_d = #{scoreD,jdbcType=INTEGER}
+            </if>
+            <if test="scoreE != null">
+                and pu_recommend.score_e = #{scoreE,jdbcType=INTEGER}
+            </if>
+            <if test="scoreF != null">
+                and pu_recommend.score_f = #{scoreF,jdbcType=INTEGER}
+            </if>
+            <if test="weight != null">
+                and pu_recommend.weight = #{weight,jdbcType=DOUBLE}
+            </if>
+            <if test="type != null">
+                and pu_recommend.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_recommend.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        ORDER BY (pu_recommend.score_a + pu_recommend.score_b +
+        pu_recommend.score_c + pu_recommend.score_d + pu_recommend.score_e +
+        pu_recommend.score_f) * weight DESC ,create_time DESC
+    </select>
+
+
+    <insert id="sumGroupRecommend" parameterType="java.util.Map">
+        INSERT into pu_group_recommend_sum (group_id, recommend_sum, recommend_suc_sum, begin_time, end_time)
+        SELECT pu_group.id, recommend_sum.recommendSum, recommend_sucess_sum.recommendSucSum, pu_group.modify_time, NOW()
+        from pu_group
+          LEFT JOIN (
+              SELECT count(*) as recommendSum, pu_group.id
+                from pu_group
+                LEFT JOIN pu_recommend on pu_group.id = pu_recommend.main_group_id
+              WHERE pu_group.id = #{groupId,jdbcType=BIGINT}) AS recommend_sum on recommend_sum.id = pu_group.id
+          LEFT JOIN (
+              SELECT count(*) as recommendSucSum, pu_group.id
+                from pu_group
+                LEFT JOIN pu_recommend_success on pu_group.id = pu_recommend_success.main_group_id
+              WHERE pu_group.id = #{groupId,jdbcType=BIGINT}) AS recommend_sucess_sum on recommend_sucess_sum.id = pu_group.id
+WHERE pu_group.id =#{groupId,jdbcType=BIGINT};
+    </insert>
+
+</mapper>

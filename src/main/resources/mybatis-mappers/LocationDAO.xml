@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.LocationDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Location">
+        <id column="pu_location_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_location_name" property="name" jdbcType="VARCHAR"/>
+        <result column="pu_location_address" property="address" jdbcType="VARCHAR"/>
+        <result column="pu_location_longitude" property="longitude" jdbcType="DOUBLE"/>
+        <result column="pu_location_latitude" property="latitude" jdbcType="DOUBLE"/>
+        <result column="pu_location_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+    pu_location.id as pu_location_id,
+    pu_location.name as pu_location_name,
+    pu_location.address as pu_location_address,
+    pu_location.longitude as pu_location_longitude,
+    pu_location.latitude as pu_location_latitude,
+    pu_location.create_time as pu_location_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_location
+        where pu_location.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_location
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_location.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_location.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="address != null">
+                and pu_location.address = #{address,jdbcType=VARCHAR}
+            </if>
+            <if test="longitude != null">
+                and pu_location.longitude = #{longitude,jdbcType=DOUBLE}
+            </if>
+            <if test="latitude != null">
+                and pu_location.latitude = #{latitude,jdbcType=DOUBLE}
+            </if>
+            <if test="createTime != null">
+                and pu_location.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_location.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_location
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_location.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="name != null">
+                and pu_location.name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="address != null">
+                and pu_location.address = #{address,jdbcType=VARCHAR}
+            </if>
+            <if test="longitude != null">
+                and pu_location.longitude = #{longitude,jdbcType=DOUBLE}
+            </if>
+            <if test="latitude != null">
+                and pu_location.latitude = #{latitude,jdbcType=DOUBLE}
+            </if>
+            <if test="createTime != null">
+                and pu_location.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_location.id desc
+        limit 1
+    </select>
+</mapper>

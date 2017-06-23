@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.DailyLivingDAO">
+    <resultMap id="BaseDailyLivingStatisData" type="com.geetion.puputuan.pojo.DailyLivingStatisData">
+        <result column="pu_daily_living_date" property="date" jdbcType="INTEGER"/>
+        <result column="pu_user_daily_living_total" property="userDailyLivingTotal" jdbcType="INTEGER"/>
+        <result column="pu_group_daily_living_total" property="groupDailyLivingTotal" jdbcType="INTEGER"/>
+
+        <association property="userIds" column="pu_daily_living_date" select="selectUserIdsByDate" />
+        <association property="groupIds" column="pu_daily_living_date" select="selectGroupIdsByDate" />
+    </resultMap>
+
+    <select id="selectUserIdsByDate" parameterType="java.util.Map" resultType="java.lang.String">
+      SELECT b.identify FROM
+        (SELECT  user_id FROM pu_user_daily_living
+        WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{pu_daily_living_date} OR DATE_FORMAT(create_time,'%Y-%m') = #{pu_daily_living_date}) a
+        LEFT JOIN pu_user b
+        ON a.user_id = b.user_id
+    </select>
+
+    <select id="selectGroupIdsByDate" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT group_id FROM pu_group_daily_living
+        WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{pu_daily_living_date} OR DATE_FORMAT(create_time,'%Y-%m') = #{pu_daily_living_date}
+    </select>
+
+
+    <select id="selectDailyLivingSum" parameterType="java.util.Map" resultMap="BaseDailyLivingStatisData">
+        SELECT
+          a.udl_date AS pu_daily_living_date,
+        IFNULL(a.udl_total,0) AS pu_user_daily_living_total,
+        IFNULL(b.gdl_total,0) AS pu_group_daily_living_total
+        FROM (
+        SELECT
+        <if test="type == 0||type == 2">
+            DATE_FORMAT(create_time,'%Y-%m-%d') udl_date
+        </if>
+        <if test="type == 1">
+            DATE_FORMAT(create_time,'%Y-%m') udl_date
+        </if>
+        ,IFNULL(COUNT(*), 0) udl_total FROM pu_user_daily_living
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="type==2">
+                create_time BETWEEN date_format(#{dailyLivingTimeBegin,jdbcType=TIMESTAMP},'%Y-%m-%d') AND date_format(#{dailyLivingTimeEnd,jdbcType=TIMESTAMP},'%Y-%m-%d')
+            </if>
+        </trim>
+        GROUP BY
+        <if test="type == 0||type == 2">
+          DATE_FORMAT(create_time,'%Y-%m-%d')
+        </if>
+        <if test="type == 1">
+            DATE_FORMAT(create_time,'%Y-%m')
+        </if>
+        ) a
+        LEFT JOIN (
+        SELECT
+        <if test="type == 0||type == 2">
+            DATE_FORMAT(create_time,'%Y-%m-%d') gdl_date
+        </if>
+        <if test="type == 1">
+            DATE_FORMAT(create_time,'%Y-%m') gdl_date
+        </if>
+        ,IFNULL(COUNT(*), 0)  gdl_total FROM pu_group_daily_living GROUP BY
+        <if test="type == 0||type == 2">
+            DATE_FORMAT(create_time,'%Y-%m-%d')
+        </if>
+        <if test="type == 1">
+            DATE_FORMAT(create_time,'%Y-%m')
+        </if>
+        ) b
+        ON a.udl_date = b.gdl_date
+        ORDER BY a.udl_date DESC
+    </select>
+</mapper>

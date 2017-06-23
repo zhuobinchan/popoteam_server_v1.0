@@ -1,0 +1,116 @@
+<div class="console-sub-title">
+  约会设置
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix" style="line-height: 31px;">
+        匹配权重
+        <button class="btn btn-sm btn-danger pull-right" ng-click="changeMatchSetting()">设置</button>
+      </div>
+      <div class="panel-body" style="min-height: 320px;">
+        <div class="row mb10">
+          <div class="col-md-8 text-center"><h4>修改</h4></div>
+          <div class="col-md-4 text-center"><h4>当前(%)</h4></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">相互点赞：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateMatchObj.mutualLike"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="matchSetting.mutualLike"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">关系度：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateMatchObj.relationship"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="matchSetting.relationship">30%</div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">已投票结果：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateMatchObj.voteResult"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="matchSetting.voteResult"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">星座：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateMatchObj.constellation"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="matchSetting.constellation"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">职业兴趣：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateMatchObj.interestionJob"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="matchSetting.interestionJob"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">约会签到：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateMatchObj.dataSign"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="matchSetting.dataSign"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix" style="line-height: 31px;">
+        约会判断条件
+        <button class="btn btn-sm btn-danger pull-right" ng-click="changeDateSetting()">设置</button>
+      </div>
+      <div class="panel-body" style="min-height: 320px;">
+        <div class="row mb10">
+          <div class="col-md-8 text-center"><h4>修改</h4></div>
+          <div class="col-md-4 text-center"><h4>当前</h4></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">定位时间间隔：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateDateObj.activityPositionInterval"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="dateSetting.activityPositionInterval+'min'"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">新约会间隔时间：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateDateObj.activityNewInterval"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="dateSetting.activityNewInterval+'h'"></div>
+        </div>
+        <div class="row lh40">
+          <div class="col-md-8">
+            <div class="col-md-6 minw105 text-right">判断半径：</div>
+            <div class="col-md-6">
+              <input class="form-control dib" type="number" ng-model="updateDateObj.activityPositionRadius"/>
+            </div>
+          </div>
+          <div class="col-md-4 text-center" ng-bind="dateSetting.activityPositionRadius+'m'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

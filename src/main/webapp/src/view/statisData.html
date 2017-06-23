@@ -1,0 +1,196 @@
+<div class="console-sub-title">
+    统计概览
+    <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            饼图统计汇总
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="container-fluid" style="padding-bottom: 10px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <span style="margin-left: 10px;">用户量统计，按</span>
+                        <select  class="form-control" ng-model="userselected" ng-change="selectChange(1);" ng-options="x.id as x.name for x in cycle"></select>
+                        <span style="margin-left: 10px;">统计，总计：{{userSum}}</span>
+                    </div>
+                    <pie id="pieData" legend="userLegend" item="item" data="userData" title="'用户量统计'"></pie>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <span style="margin-left: 10px;">队伍总量统计，按</span>
+                        <select  class="form-control" ng-model="groupselected" ng-change="selectChange(2);" ng-options="x.id as x.name for x in cycle"></select>
+                        <span style="margin-left: 10px;">统计，总计：{{groupSum}}</span>
+                    </div>
+                    <pie id="groupData" legend="groupLegend" item="item" data="groupData" title="'队伍数量统计'"></pie>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 用户量，柱状图 -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            用户量柱状图统计汇总
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-inline search-con" style="padding: 0;">
+            <div class="dib m10">
+                <span style="margin-left: 10px;">统计方式：</span>
+                <select  class="form-control" ng-model="userCycleType" ng-options="x.id as x.name for x in cycleType"></select>
+            </div>
+
+            <div class="dib m10">
+                <span style="margin-left: 10px;">统计时间范围：</span>
+                <div class="input-group dropdown" style="width: 140px;">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="formDate">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="user.beginTime"
+                                   data-date-time-input="YYYY-MM-DD" readonly>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="user.beginTime"
+                                        data-datetimepicker-config="{ dropdownSelector: '#formDate', startView: 'month', minView: 'day'}">
+                        </datetimepicker>
+                    </ul>
+                </div>
+                <span>-</span>
+
+                <div class="input-group dropdown" style="width: 140px;">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="toDate">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="user.endTime"
+                                   data-date-time-input="YYYY-MM-DD" readonly>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="user.endTime"
+                                        data-datetimepicker-config="{ dropdownSelector: '#toDate', startView: 'month', minView: 'day'}">
+                        </datetimepicker>
+                    </ul>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" ng-click="searchUserSumForBar()">查询</button>
+        </div>
+        <bar id="userBar" legend="userLegend" item="userBarItem" data="userBarData"></bar>
+    </div>
+</div>
+
+<!-- 队伍量，柱状图 -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            队伍柱状图统计汇总
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-inline search-con" style="padding: 0;">
+            <div class="dib m10">
+                <span style="margin-left: 10px;">统计方式：</span>
+                <select  class="form-control" ng-model="groupCycleType" ng-options="x.id as x.name for x in cycleType"></select>
+            </div>
+
+            <div class="dib m10">
+                <span style="margin-left: 10px;">统计时间范围：</span>
+                <div class="input-group dropdown" style="width: 140px;">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="formDate1">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="group.beginTime"
+                                   data-date-time-input="YYYY-MM-DD" readonly>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="group.beginTime"
+                                        data-datetimepicker-config="{ dropdownSelector: '#formDate1', startView: 'month', minView: 'day'}">
+                        </datetimepicker>
+                    </ul>
+                </div>
+                <span>-</span>
+
+                <div class="input-group dropdown" style="width: 140px;">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="toDate1">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="group.endTime"
+                                   data-date-time-input="YYYY-MM-DD" readonly>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="group.endTime"
+                                        data-datetimepicker-config="{ dropdownSelector: '#toDate1', startView: 'month', minView: 'day'}">
+                        </datetimepicker>
+                    </ul>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" ng-click="searchGroupSumForBar()">查询</button>
+        </div>
+        <bar id="groupBar" legend="groupLegend" item="groupBarItem" data="groupBarData"></bar>
+    </div>
+</div>
+
+
+
+<!-- 约会量，柱状图 -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            队伍柱状图统计汇总
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-inline search-con" style="padding: 0;">
+            <div class="dib m10">
+                <span style="margin-left: 10px;">统计方式：</span>
+                <select  class="form-control" ng-model="activityCycleType" ng-options="x.id as x.name for x in cycleType"></select>
+            </div>
+
+            <div class="dib m10">
+                <span style="margin-left: 10px;">统计时间范围：</span>
+                <div class="input-group dropdown" style="width: 140px;">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="formDate2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="activity.beginTime"
+                                   data-date-time-input="YYYY-MM-DD" readonly>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="activity.beginTime"
+                                        data-datetimepicker-config="{ dropdownSelector: '#formDate2', startView: 'month', minView: 'day'}">
+                        </datetimepicker>
+                    </ul>
+                </div>
+                <span>-</span>
+
+                <div class="input-group dropdown" style="width: 140px;">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="toDate2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-ng-model="activity.endTime"
+                                   data-date-time-input="YYYY-MM-DD" readonly>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="activity.endTime"
+                                        data-datetimepicker-config="{ dropdownSelector: '#toDate2', startView: 'month', minView: 'day'}">
+                        </datetimepicker>
+                    </ul>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" ng-click="searchActivitySumForBar()">查询</button>
+        </div>
+        <bar id="activityBar" legend="activityLegend" item="activityBarItem" data="activityBarData"></bar>
+    </div>
+</div>

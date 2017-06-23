@@ -1,0 +1,98 @@
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+$color-active-item: #5bc0de;
+
+.province-list-con {
+    @extend .unselectable;
+    .make-sure-con{
+        >i{
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    }
+    .province-item {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        padding: 0 10px;
+        background-color: #d3d3d3;
+        line-height: 28px;
+        color: #333333;
+        &:active, &.active {
+            color: #fff;
+            background-color: $color-active-item;
+            &:hover, &.hover {
+                cursor: default;
+                color: #fff;
+                background-color: $color-active-item;
+            }
+        }
+        &:hover, &.hover {
+            cursor: pointer;
+            color: #fff;
+            background-color: darken($color-active-item, 20%);
+        }
+    }
+}
+
+.city-list-con {
+    position: relative;
+    height: auto;
+    min-height: 150px;
+    margin-top: 20px;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border: 1px solid #d3d3d3;
+    .select-all-label{
+        display: block;
+    }
+    .city-checkbox-item {
+        margin-right: 10px;
+        font-weight: normal;
+        > input[type=checkbox] {
+            margin-right: 5px;
+        }
+    }
+    .btn-selected-cities {
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+    }
+}
+
+.selected-list-con {
+    margin-top: 20px;
+    border-top: 1px dashed #f0f0f0;
+    .selected-wrap {
+        padding: 5px;
+        .selected-province-con {
+            border-radius: 4px;
+            background-color: #d9edf7;
+            padding: 10px;
+            .selected-province-title {
+                font-size: 16px;
+                font-weight: bold;
+                margin-top: 0;
+                > i {
+                    float: right;
+                    cursor: pointer;
+                    color: #c9302c;
+                }
+            }
+            .selected-city-item {
+                margin-right: 8px;
+                line-height: 28px;
+                > i {
+                    cursor: pointer;
+                    color: #ababab;
+                }
+            }
+        }
+    }
+}

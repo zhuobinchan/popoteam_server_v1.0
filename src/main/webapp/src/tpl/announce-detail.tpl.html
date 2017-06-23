@@ -1,0 +1,25 @@
+<div class="modal" id="news-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="min-width:600px; overflow: hidden">
+                    <div class="col-md-12 developer-info-item">
+                        <span class="col-md-4">标题：</span>
+                        <span class="col-md-8" ng-bind="curObj.title"></span>
+                    </div>
+                    <div class="col-md-12 developer-info-item" style="height:auto">
+                        <span class="col-md-4">内容：</span>
+                        <span class="col-md-8 newsContainer"  ng-bind="curObj.content" ></span>
+                    </div>
+                    <div class="col-md-12 developer-info-item" style="height:auto">
+                        <span class="col-md-4">对应url：{{curObj.url}}</span>
+                        <p class="col-md-8 newsContainer"  style="word-break:normal;"></p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

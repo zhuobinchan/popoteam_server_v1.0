@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.RecommendHistoryDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.RecommendHistory">
+        <id column="pu_recommend_history_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_recommend_history_recommend_id" property="recommendId" jdbcType="BIGINT"/>
+        <result column="pu_recommend_history_main_group_id" property="mainGroupId" jdbcType="BIGINT"/>
+        <result column="pu_recommend_history_match_group_id" property="matchGroupId" jdbcType="BIGINT"/>
+        <result column="pu_recommend_history_score_a" property="scoreA" jdbcType="INTEGER"/>
+        <result column="pu_recommend_history_score_b" property="scoreB" jdbcType="INTEGER"/>
+        <result column="pu_recommend_history_score_c" property="scoreC" jdbcType="INTEGER"/>
+        <result column="pu_recommend_history_score_d" property="scoreD" jdbcType="INTEGER"/>
+        <result column="pu_recommend_history_score_e" property="scoreE" jdbcType="INTEGER"/>
+        <result column="pu_recommend_history_score_f" property="scoreF" jdbcType="INTEGER"/>
+        <result column="pu_recommend_history_weight" property="weight" jdbcType="DOUBLE"/>
+        <result column="pu_recommend_history_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_recommend_history.id as pu_recommend_history_id,
+        pu_recommend_history.recommend_id as pu_recommend_history_recommend_id,
+        pu_recommend_history.main_group_id as pu_recommend_history_main_group_id,
+        pu_recommend_history.match_group_id as pu_recommend_history_match_group_id,
+        pu_recommend_history.score_a as pu_recommend_history_score_a,
+        pu_recommend_history.score_b as pu_recommend_history_score_b,
+        pu_recommend_history.score_c as pu_recommend_history_score_c,
+        pu_recommend_history.score_d as pu_recommend_history_score_d,
+        pu_recommend_history.score_e as pu_recommend_history_score_e,
+        pu_recommend_history.score_f as pu_recommend_history_score_f,
+        pu_recommend_history.weight as pu_recommend_history_weight,
+        pu_recommend_history.create_time as pu_recommend_history_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend_history
+        where pu_recommend_history.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend_history
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_recommend_history.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_recommend_history.recommend_id = #{recommendId,jdbcType=BIGINT}
+            </if>
+            <if test="mainGroupId != null">
+                and pu_recommend_history.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="matchGroupId != null">
+                and pu_recommend_history.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="scoreA != null">
+                and pu_recommend_history.score_a = #{scoreA,jdbcType=INTEGER}
+            </if>
+            <if test="scoreB != null">
+                and pu_recommend_history.score_b = #{scoreB,jdbcType=INTEGER}
+            </if>
+            <if test="scoreC != null">
+                and pu_recommend_history.score_c = #{scoreC,jdbcType=INTEGER}
+            </if>
+            <if test="scoreD != null">
+                and pu_recommend_history.score_d = #{scoreD,jdbcType=INTEGER}
+            </if>
+            <if test="scoreE != null">
+                and pu_recommend_history.score_e = #{scoreE,jdbcType=INTEGER}
+            </if>
+            <if test="scoreF != null">
+                and pu_recommend_history.score_f = #{scoreF,jdbcType=INTEGER}
+            </if>
+            <if test="weight != null">
+                and pu_recommend_history.weight = #{weight,jdbcType=DOUBLE}
+            </if>
+            <if test="createTime != null">
+                and pu_recommend_history.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_recommend_history.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_recommend_history
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_recommend_history.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="recommendId != null">
+                and pu_recommend_history.recommend_id = #{recommendId,jdbcType=BIGINT}
+            </if>
+            <if test="mainGroupId != null">
+                and pu_recommend_history.main_group_id = #{mainGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="matchGroupId != null">
+                and pu_recommend_history.match_group_id = #{matchGroupId,jdbcType=BIGINT}
+            </if>
+            <if test="scoreA != null">
+                and pu_recommend_history.score_a = #{scoreA,jdbcType=INTEGER}
+            </if>
+            <if test="scoreB != null">
+                and pu_recommend_history.score_b = #{scoreB,jdbcType=INTEGER}
+            </if>
+            <if test="scoreC != null">
+                and pu_recommend_history.score_c = #{scoreC,jdbcType=INTEGER}
+            </if>
+            <if test="scoreD != null">
+                and pu_recommend_history.score_d = #{scoreD,jdbcType=INTEGER}
+            </if>
+            <if test="scoreE != null">
+                and pu_recommend_history.score_e = #{scoreE,jdbcType=INTEGER}
+            </if>
+            <if test="scoreF != null">
+                and pu_recommend_history.score_f = #{scoreF,jdbcType=INTEGER}
+            </if>
+            <if test="weight != null">
+                and pu_recommend_history.weight = #{weight,jdbcType=DOUBLE}
+            </if>
+            <if test="createTime != null">
+                and pu_recommend_history.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_recommend_history.id desc
+        limit 1
+    </select>
+</mapper>

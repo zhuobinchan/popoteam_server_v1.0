@@ -1,0 +1,88 @@
+<div class="form-inline clearfix" style="margin-bottom: 10px;">
+    <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;" onclick="JavaScript:window.history.back(-1);">
+        返回
+    </button>
+</div>
+<div style="border:1px solid #ddd;padding: 20px;margin-bottom: 20px;overflow: hidden">
+    <div class="pull-left" style="margin-right:20px;">
+        <img src="/res/img/default-photo.png" ng-src="{{userObj.head.url}}" style="width:100px;height:100px;" alt="">
+    </div>
+    <div class="pull-left" style="max-width:80%">
+        <span class="user-detail-label" ng-bind="'ID：'+userObj.identify"></span>
+        <span class="user-detail-label" ng-bind="'昵称：'+userObj.nickName"></span>
+        <span class="user-detail-label" ng-bind="'来自：'+userObj.province+','+userObj.city"></span>
+        <span class="user-detail-label">兴趣：<span data-form-list data-list="{{userObj.interestList}}"
+                                                 data-key="name"></span></span>
+        <span class="user-detail-label">职业：<span data-form-list data-list="{{userObj.jobList}}"
+                                                 data-key="name"></span></span>
+        <span class="user-detail-label" ng-bind="'资料完善程度：'+userObj.dataFullRatio"></span>
+        <!--<span class="user-detail-label" ng-bind="'匹配总数：'+userObj.matchTimes"></span>-->
+        <span class="user-detail-label" ng-bind="'是否在队伍中：'+userObj.isInGroup"></span>
+        <span class="user-detail-label" ng-bind="'是否在约会中：'+userObj.isInActivity"></span>
+        <span class="user-detail-label"
+                  ng-bind="'（好友）搜索/约会：'+userObj.friendFromSearch + '/' + userObj.friendFromActivity"></span>
+        <!--<span class="user-detail-label" ng-bind="'被投诉：'+userObj.nickName"></span>-->
+        <!--<span class="user-detail-label" ng-bind="'投诉：'+userObj.nickName"></span>-->
+        <!--<span class="user-detail-label" ng-bind="'被浏览：'+userObj.beViewedNumber"></span>-->
+        <!--<span class="user-detail-label" ng-bind="'拍照/相册：'+userObj.photoByTake + '/' + userObj.photoInAlbum"></span>-->
+        <span class="user-detail-label" ng-bind="'组队总数：'+userObj.joinGroup"></span>
+        <span class="user-detail-label" ng-bind="'邀请次数(总量)：'+userObj.invitedTimes"></span>
+        <span class="user-detail-label" ng-bind="'被邀请(总量)：'+userObj.beInvitedTimes"></span>
+        <span class="user-detail-label" ng-bind="'约会总量：'+userObj.activityTimes"></span>
+        <span class="user-detail-label" ng-bind="'SuperLike次数：'+userObj.superLikeTimes"></span>
+        <span class="user-detail-label" ng-bind="'匹配成功率：'+userObj.matchSuccessRatio"></span>
+        <span class="user-detail-label" ng-bind="'组队总量(当天)：'+userObj.joinGroupCurrent"></span>
+        <span class="user-detail-label" ng-bind="'约会总量(当天)：'+userObj.activityCurrentTimes"></span>
+
+    </div>
+</div>
+<ul class="nav nav-tabs">
+    <li class="active" role="presentation" ng-click="getFriends()">
+        <a data-toggle='tab' href='.friend-tab'>好友</a>
+    </li>
+    <li role="presentation" ng-click="searchPhoto(1,5)">
+        <a data-toggle='tab' href='.album-tab'>相册</a>
+    </li>
+    <li role="presentation" ng-click="getGroup(1,15)">
+        <a data-toggle='tab' href='.homosex-group-tab'>同性群组</a>
+    </li>
+    <li role="presentation" ng-click="getActivity(1,15)">
+        <a data-toggle='tab' href='.date-group-tab'>约会群组</a>
+    </li>
+</ul>
+<div class="tab-content" style="border:1px solid #ddd;border-top:none;padding: 20px;">
+    <div class="friend-tab tab-pane active">
+        <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+        <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+    </div>
+
+    <!-- 相册列表 -->
+    <div class="album-tab tab-pane" style="overflow: hidden">
+        <div data-g-loading-tip data-g-is-loading="isLoadingPhoto" data-g-is-successed="isSuccessedPhoto"></div>
+        <div ng-hide="photoList.length||isLoadingPhoto">
+            暂无
+        </div>
+        <div class="album" ng-repeat="photo in photoList">
+            <div class="photo">
+                <img src="/res/img/default-photo.png" alt="" ng-src="{{photo.image.url}}">
+            </div>
+            <div class="detail">
+                <div class="text" ng-bind="photo.content|textLengthFilter:10||'暂无'"></div>
+                <div class="date" ng-bind="photo.createTime"></div>
+                <div class="date"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<span ng-bind="photo.likeNumber"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 同性列表 -->
+    <div class="homosex-group-tab tab-pane">
+        <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+        <div ui-grid="groupGridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+    </div>
+
+    <!-- 约会列表 -->
+    <div class="date-group-tab tab-pane">
+        <div data-g-loading-tip data-g-is-loading="isLoading" data-g-is-successed="isSuccessed"></div>
+        <div ui-grid="activityGridOptions" ui-grid-selection ui-grid-pagination class="grid" style="height:400px;"></div>
+    </div>
+</div>

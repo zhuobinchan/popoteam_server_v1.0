@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.ActivityHistoryDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.ActivityHistory">
+        <id column="pu_activity_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_activity_name" property="name" jdbcType="VARCHAR"/>
+        <result column="pu_activity_group_a_id" property="groupAId" jdbcType="BIGINT"/>
+        <result column="pu_activity_group_b_id" property="groupBId" jdbcType="BIGINT"/>
+        <result column="pu_activity_group_a_name" property="groupAName" jdbcType="VARCHAR"/>
+        <result column="pu_activity_group_b_name" property="groupBName" jdbcType="VARCHAR"/>
+        <result column="pu_activity_room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="pu_activity_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_activity_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_activity_super_like" property="superLike" jdbcType="INTEGER"/>
+        <result column="pu_activity_expire_time" property="expireTime" jdbcType="TIMESTAMP"/>
+        <result column="pu_activity_expire_type" property="expireType" jdbcType="INTEGER"/>
+        <result column="pu_activity_is_expire" property="isExpire" javaType="INTEGER"/>
+    </resultMap>
+
+
+    <sql id="tableProperty">
+    pu_activity.id as pu_activity_id,
+    pu_activity.name as pu_activity_name,
+    pu_activity.group_a_id as pu_activity_group_a_id,
+    pu_activity.group_b_id as pu_activity_group_b_id,
+    pu_activity.room_id as pu_activity_room_id,
+    pu_activity.type as pu_activity_type,
+    pu_activity.create_time as pu_activity_create_time,
+    pu_activity.super_like as pu_activity_super_like,
+    pu_activity.expire_time as pu_activity_expire_time,
+    pu_activity.expire_type as pu_activity_expire_type,
+    pu_activity.is_expire as pu_activity_is_expire
+    </sql>
+
+    <insert id="insertIntoFromActivity" parameterType="java.util.List">
+      INSERT into pu_activity_history SELECT * FROM pu_activity WHERE id in
+        <foreach collection="list" index="index" item="item"  open="(" close=")" separator=",">
+         #{item.id}
+        </foreach>;
+    </insert>
+
+</mapper>

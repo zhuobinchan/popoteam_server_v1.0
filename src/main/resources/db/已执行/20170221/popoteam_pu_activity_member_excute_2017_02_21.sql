@@ -1,0 +1,1 @@
+ALTER TABLE popoteam.pu_activity_member DROP FOREIGN KEY fk_activity_member_ref_activity;

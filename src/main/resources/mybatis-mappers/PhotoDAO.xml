@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.PhotoDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.Photo">
+        <id column="pu_photo_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_photo_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_photo_image_id" property="imageId" jdbcType="BIGINT"/>
+        <result column="pu_photo_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_photo_type" property="type" jdbcType="INTEGER"/>
+        <!--result column="pu_photo_is_delete" property="isDelete" jdbcType="TINYINT"/-->
+        <result column="pu_photo_is_avatar" property="isAvatar" jdbcType="TINYINT"/>
+        <result column="pu_photo_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 带有相册点赞数 -->
+    <resultMap id="BaseResultMapWithLikeCount" type="com.geetion.puputuan.pojo.PhotoWithLikeCount">
+        <id column="pu_photo_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_photo_user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="pu_photo_image_id" property="imageId" jdbcType="BIGINT"/>
+        <result column="pu_photo_content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="pu_photo_type" property="type" jdbcType="INTEGER"/>
+        <!--result column="pu_photo_is_delete" property="isDelete" jdbcType="TINYINT"/-->
+        <result column="pu_photo_like_number" property="likeNumber" jdbcType="INTEGER"/>
+        <result column="pu_photo_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_photo.id as pu_photo_id,
+        pu_photo.user_id as pu_photo_user_id,
+        pu_photo.image_id as pu_photo_image_id,
+        pu_photo.content as pu_photo_content,
+        pu_photo.type as pu_photo_type,
+        pu_photo.is_avatar as pu_photo_is_avatar,
+        pu_photo.create_time as pu_photo_create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_photo
+        where pu_photo.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_photo
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_photo.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_photo.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="imageId != null">
+                and pu_photo.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_photo.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_photo.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="isAvatar != null">
+                and pu_photo.is_avatar = #{isAvatar,jdbcType=TINYINT}
+            </if>
+            <if test="createTime != null">
+                and pu_photo.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        <!--order by pu_photo.id desc-->
+    </select>
+
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_photo
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_photo.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_photo.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="imageId != null">
+                and pu_photo.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_photo.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_photo.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="isAvatar != null">
+                and pu_photo.is_avatar = #{isAvatar,jdbcType=TINYINT}
+            </if>
+            <if test="createTime != null">
+                and pu_photo.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        <!--order by pu_photo.id desc-->
+        limit 1
+    </select>
+
+    <select id="selectParamWithLikeCount" parameterType="java.util.Map" resultMap="BaseResultMapWithLikeCount">
+        select
+        <include refid="tableProperty"/>,
+        ifnull(COUNT(pu_photo_like.id),0) AS pu_photo_like_number
+        from pu_photo
+        LEFT JOIN pu_photo_like ON pu_photo_like.photo_id = pu_photo.id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_photo.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_photo.user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="imageId != null">
+                and pu_photo.image_id = #{imageId,jdbcType=BIGINT}
+            </if>
+            <if test="content != null">
+                and pu_photo.content = #{content,jdbcType=LONGVARCHAR}
+            </if>
+            <if test="type != null">
+                and pu_photo.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="isAvatar != null">
+                and pu_photo.is_avatar = #{isAvatar,jdbcType=TINYINT}
+            </if>
+            <if test="createTime != null">
+                and pu_photo.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        GROUP BY pu_photo.id
+        <!--order by pu_photo.id desc-->
+    </select>
+
+
+</mapper>

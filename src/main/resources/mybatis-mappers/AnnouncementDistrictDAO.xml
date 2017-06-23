@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.AnnouncementDistrictDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.AnnouncementDistrict">
+        <id column="pu_announcement_district_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_announcement_district_announcement_id" property="announcementId" jdbcType="BIGINT"/>
+        <result column="pu_announcement_district_province_id" property="provinceId" jdbcType="INTEGER"/>
+        <result column="pu_announcement_district_city_id" property="cityId" jdbcType="INTEGER"/>
+        <result column="pu_announcement_district_area_id" property="areaId" jdbcType="INTEGER"/>
+        <result column="pu_announcement_district_type" property="type" jdbcType="INTEGER"/>
+        <result column="pu_announcement_district_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="tableProperty">
+        pu_announcement_district.id as pu_announcement_district_id,
+        pu_announcement_district.announcement_id as pu_announcement_district_announcement_id,
+        pu_announcement_district.province_id as pu_announcement_district_province_id,
+        pu_announcement_district.city_id as pu_announcement_district_city_id,
+        pu_announcement_district.area_id as pu_announcement_district_area_id,
+        pu_announcement_district.type as pu_announcement_district_type,
+        pu_announcement_district.create_time as pu_announcement_district_create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>
+        from pu_announcement_district
+        where pu_announcement_district.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_announcement_district
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_announcement_district.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="announcementId != null">
+                and pu_announcement_district.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="provinceId != null">
+                and pu_announcement_district.province_id = #{provinceId,jdbcType=INTEGER}
+            </if>
+            <if test="cityId != null">
+                and pu_announcement_district.city_id = #{cityId,jdbcType=INTEGER}
+            </if>
+            <if test="areaId != null">
+                and pu_announcement_district.area_id = #{areaId,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                and pu_announcement_district.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_announcement_district.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_announcement_district.id desc
+    </select>
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>
+        from pu_announcement_district
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_announcement_district.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="announcementId != null">
+                and pu_announcement_district.announcement_id = #{announcementId,jdbcType=BIGINT}
+            </if>
+            <if test="provinceId != null">
+                and pu_announcement_district.province_id = #{provinceId,jdbcType=INTEGER}
+            </if>
+            <if test="cityId != null">
+                and pu_announcement_district.city_id = #{cityId,jdbcType=INTEGER}
+            </if>
+            <if test="areaId != null">
+                and pu_announcement_district.area_id = #{areaId,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                and pu_announcement_district.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and pu_announcement_district.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+        order by pu_announcement_district.id desc
+        limit 1
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true">
+
+        INSERT INTO pu_announcement_district (announcement_id,province_id,city_id,area_id,type)
+        VALUES
+        <foreach collection="list" item="item" separator="," index="index">
+            ( #{item.announcementId}, #{item.provinceId}, #{item.cityId}, #{item.areaId}, #{item.type})
+        </foreach>
+
+    </insert>
+</mapper>

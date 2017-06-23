@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.geetion.puputuan.dao.UserBlackListDAO">
+    <resultMap id="BaseResultMap" type="com.geetion.puputuan.model.UserBlackList">
+        <id column="pu_bl_id" property="id" jdbcType="BIGINT"/>
+        <result column="pu_bl_userId" property="userId" jdbcType="VARCHAR" />
+        <result column="pu_bl_status" property="status" jdbcType="INTEGER"/>
+        <result column="pu_bl_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="user" column="pu_bl_userId"
+                     javaType="com.geetion.puputuan.model.User"
+                     resultMap="com.geetion.puputuan.dao.UserDAO.BaseResultMap"/>
+    </resultMap>
+
+    <sql id="tableProperty">
+        pu_user_black_list.id as pu_bl_id,
+        pu_user_black_list.user_id as pu_bl_userId,
+        pu_user_black_list.status as pu_bl_status,
+        pu_user_black_list.create_time as pu_bl_create_times
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_user_black_list
+        LEFT JOIN pu_user ON pu_user_black_list.user_id = pu_user.user_id
+        where pu_user_black_list.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectOne" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_user_black_list
+        LEFT JOIN pu_user ON pu_user_black_list.user_id = pu_user.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_user_black_list.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_user_black_list.user_id = #{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                and pu_user_black_list.status = #{status,jdbcType=BIGINT}
+            </if>
+        </trim>
+        order by pu_user_black_list.id desc
+        limit 1
+    </select>
+
+    <select id="selectParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="tableProperty"/>,
+        <include refid="com.geetion.puputuan.dao.UserDAO.tableProperty"/>
+        from pu_user_black_list
+        LEFT JOIN pu_user ON pu_user_black_list.user_id = pu_user.user_id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and pu_user_black_list.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and pu_user_black_list.user_id = #{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                and pu_user_black_list.status = #{status,jdbcType=BIGINT}
+            </if>
+            <if test="null!=identifies and identifies.length>0">
+                and pu_user.identify IN
+                <foreach item="item" index="index" collection="identifies" open="("
+                         separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="nickName != null">
+                and pu_user.nick_name like concat('%',#{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null">
+                and pu_user.phone like concat('%', #{phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="sex != null">
+                and pu_user.sex = #{sex,jdbcType=VARCHAR}
+            </if>
+        </trim>
+        order by pu_user_black_list.create_time
+    </select>
+
+    <insert id="insertUserBlackLists" parameterType="java.util.Map">
+        INSERT INTO pu_user_black_list (user_id) SELECT user_id FROM  pu_user
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="null!=identifies and identifies.length>0">
+                and pu_user.identify IN
+                <foreach item="item" index="index" collection="identifies" open="("
+                         separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="null!=phones and phones.length>0">
+                and pu_user.phone IN
+                <foreach item="item" index="index" collection="phones" open="("
+                         separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteUserBlackLists" parameterType="java.util.Map">
+        DELETE pu_user_black_list FROM pu_user_black_list LEFT JOIN pu_user ON pu_user.user_id = pu_user_black_list.user_id
+            <trim prefix="where" prefixOverrides="and|or">
+                <if test="null!=identifies and identifies.length>0">
+                    and pu_user.identify IN
+                    <foreach item="item" index="index" collection="identifies" open="("
+                             separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="null!=phones and phones.length>0">
+                    and pu_user.phone IN
+                    <foreach item="item" index="index" collection="phones" open="("
+                             separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </trim>
+    </delete>
+</mapper>

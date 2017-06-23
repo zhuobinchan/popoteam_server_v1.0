@@ -1,0 +1,29 @@
+.user-detail-label{
+  width:180px;
+  line-height: 30px;
+  display: inline-block;
+  float:left;
+}
+.album{
+  margin-right: 10px;
+  float: left;
+  width: 200px;
+  height: 250px;
+  border: 1px solid #e8e8e8;
+  .photo{
+    height: 180px;
+    text-align: center;
+    border-bottom: 1px solid #e8e8e8;
+    img{
+      height: 180px;
+      max-width: 100%;
+    }
+  }
+  .detail{
+    padding:5px 15px;
+    .date{
+      font-size:14px;
+      color: #adadad;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+<div class="modal" id="multiCitiesModal" tabindex="-1" role="dialog" aria-labelledby="multiCitiesModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">选择地区</h4>
+            </div>
+            <div class="modal-body">
+                <div class="province-list-con">
+                    <div style="margin-bottom: 15px;">
+                        <span class="province-item" ng-class="{'active':isSelectedAll}" ng-click="selectAllDistricts()">全选</span>
+                        <span class="make-sure-con" ng-show="toMakeSure">
+                            确定删除已选地区，选择全部地区?
+                            <i class="fa fa-check text-success" aria-hidden="true" title="确定" ng-click="clearSelected()"></i>
+                            <i class="fa fa-ban text-danger" aria-hidden="true" title="取消" ng-click="doNotClear()"></i>
+                        </span>
+                    </div>
+                    <span class="province-item" ng-repeat="p in provinceList" ng-class="{'active':p.isActive}"
+                          ng-bind="p.name" ng-click="getCities(p)"></span>
+                </div>
+
+                <div class="city-list-con" ng-show="currentCities.length > 0">
+                    <label class="select-all-label">
+                        <input type="checkbox" ng-model="currentProvince.isSelectedAll" ng-change="selectAll()">
+                        {{currentProvince.name}}&nbsp;所有地区
+                    </label>
+                    <label ng-repeat="c in currentCities" class="city-checkbox-item">
+                        <input type="checkbox" ng-model="c.isSelected" ng-change="checkIsSelectedAll(c.isSelected)">{{c.name}}
+                    </label>
+                    <button type="button" class="btn btn-danger btn-selected-cities" ng-click="selectCities()">添加
+                    </button>
+                </div>
+
+                <div class="selected-list-con">
+                    <h5>已选地区：</h5>
+                    <div class="row">
+                        <div class="selected-wrap col-md-4" ng-repeat="d in selectedDistricts">
+                            <div class="selected-province-con">
+                                <h5 class="selected-province-title">{{d.province.name}}
+                                    <i class="fa fa-trash" ng-click="deleteProvince($index)"
+                                       aria-hidden="true" title="移除该省份"></i>
+                                </h5>
+                                <span class="selected-city-item" ng-repeat="c in d.cities">{{c.name}}
+                                    <i class="fa fa-times-circle" ng-click="deleteCity($parent.$index,$index)"
+                                       aria-hidden="true" title="移除该城市"></i>
+                                </span>
+                                <span class="selected-city-item" ng-show="d.province.isSelectedAll">{{d.province.name}}&nbsp;所有地区</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
